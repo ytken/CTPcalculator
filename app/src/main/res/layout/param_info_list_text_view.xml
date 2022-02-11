@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingLeft="@dimen/padding_sides"
+    android:paddingRight="@dimen/padding_sides"
+    android:background="@drawable/rounded_template_gray"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewListViewDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_marginTop="11dp"
+        android:hint="Hint"
+        android:textColor="@color/description_text"
+        android:textSize="12dp"
+        android:background="@null"/>
+
+    <TextView
+        android:id="@+id/textViewZnach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="4dp"
+        android:text="Znach"
+        android:textSize="@dimen/normalTextSize2"
+        android:textColor="@color/main_text"
+        android:gravity="center_vertical"/>
+
+</LinearLayout>

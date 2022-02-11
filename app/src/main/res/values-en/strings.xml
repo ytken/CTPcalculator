@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CTPcalculator</string>
+    <string name="CTPcalculator">CTPcalculator</string>
+    <string name="buttonCalculateCTP">Calculate CTP</string>
+    <string name="yourCoefficients">Your coefficients</string>
+    <string name="buttonNext">Next</string>
+</resources>
