@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bigTextSize">28sp</dimen>
+    <dimen name="smallTextSize">12sp</dimen>
+    <dimen name="normalTextSize1">15sp</dimen>
+    <dimen name="normalTextSize2">16sp</dimen>
+
+    <dimen name="heightHeading">34dp</dimen>
+    <dimen name="padding_sides">16dp</dimen>
+    <dimen name="padding_sides2">17dp</dimen>
+    <dimen name="padding_top">36dp</dimen>
+    <dimen name="heightListView">68dp</dimen>
+    <dimen name="verticalMargins">24dp</dimen>
+</resources>
