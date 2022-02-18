@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="@dimen/padding_sides"
     android:paddingRight="@dimen/padding_sides"
     android:background="@drawable/rounded_template_gray"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/background"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="12dp">
 
     <TextView
         android:id="@+id/textViewListViewDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:layout_marginLeft="@dimen/padding_sides"
         android:layout_marginTop="11dp"
+        android:layout_marginRight="@dimen/padding_sides"
+        android:layout_gravity="top"
+        android:background="@null"
+        android:gravity="left"
         android:hint="Hint"
         android:textColor="@color/description_text"
-        android:textSize="12dp"
-        android:background="@null"/>
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/textViewZnach"
@@ -24,9 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="4dp"
+        android:layout_marginLeft="@dimen/padding_sides"
+        android:layout_marginRight="@dimen/padding_sides"
+        android:layout_gravity="bottom"
         android:text="Znach"
         android:textSize="@dimen/normalTextSize2"
         android:textColor="@color/main_text"
         android:gravity="center_vertical"/>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -77,11 +77,12 @@
                     android:id="@+id/listViewCoefficients"
                     android:background="@drawable/rounded_template_white"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/heightListView"
+                    android:layout_height="match_parent"
                     android:groupIndicator="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    android:listSelector="@android:color/transparent"/>
 
                 <ListView
                     android:id="@+id/listViewParameters"
@@ -95,7 +96,8 @@
                     android:paddingLeft="@dimen/padding_sides"
                     android:paddingTop="@dimen/padding_sides2"
                     android:paddingRight="@dimen/padding_sides"
-                    android:paddingBottom="@dimen/padding_sides2" />
+                    android:paddingBottom="@dimen/padding_sides2"
+                    android:listSelector="@android:color/transparent"/>
 
             </LinearLayout>
 

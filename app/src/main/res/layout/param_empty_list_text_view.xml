@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:paddingLeft="@dimen/padding_sides"
-    android:paddingRight="@dimen/padding_sides"
-    android:background="@drawable/rounded_template_gray">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/background"
+    app:cardElevation="0dp">
 
     <TextView
         android:id="@+id/textViewListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/padding_sides"
+        android:layout_marginRight="@dimen/padding_sides"
         android:gravity="left"
         android:hint="Hint"
         android:textColor="@color/description_text"
         android:textSize="@dimen/normalTextSize2"
         android:background="@null"/>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -13,6 +13,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/blue_accent</item>
         <!-- Customize your theme here. -->
         <item name="background">@color/background</item>
+
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="textCoeffStyle" parent="TextAppearance.AppCompat">
@@ -32,14 +34,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="CoeffBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
-        <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="colorPrimary">@color/blue_accent</item>
-        <item name="behavior_peekHeight">400dp</item>
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
     </style>
 
-    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="behavior_peekHeight">400dp</item>
+        <item name="colorPrimary">@color/blue_accent</item>
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/top_rounded_template_white</item>
     </style>
 
 </resources>

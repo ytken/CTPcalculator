@@ -3,13 +3,11 @@ package ru.ytken.sravni.internship.presentation
 import android.app.Dialog
 import android.content.res.TypedArray
 import android.os.Bundle
-import android.os.Handler
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -31,7 +29,6 @@ class ParameterBottomSheet(val vm: MainViewModel): BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
@@ -93,8 +90,8 @@ class ParameterBottomSheet(val vm: MainViewModel): BottomSheetDialogFragment() {
         dismiss()
     }
 
-    override fun getTheme(): Int {
-        return R.style.CoeffBottomSheetDialog
-    }
+    /*override fun getTheme(): Int {
+        return R.style.Theme_App
+    */
 
 }

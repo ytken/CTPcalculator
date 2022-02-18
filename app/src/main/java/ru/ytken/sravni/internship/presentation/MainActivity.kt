@@ -24,8 +24,6 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val expListHeadings: TypedArray = resources.obtainTypedArray(R.array.expandable_list_headings)
-
         vm = ViewModelProvider(this, MainViewModelFactory(this))
             .get(MainViewModel::class.java)
 
@@ -42,14 +40,10 @@ class MainActivity : AppCompatActivity(){
             expandableListAdapter.notifyDataSetChanged()
         })
         expandableListView.setOnGroupCollapseListener {
-            val layoutParams = expandableListView.layoutParams
-            layoutParams.height = getValueInPixel(68)
-            expandableListView.layoutParams = layoutParams
+            MainScreenUtils.setListViewHeightBasedOnChildren(expandableListView)
         }
         expandableListView.setOnGroupExpandListener {
-            val layoutParams = expandableListView.layoutParams
-            layoutParams.height = getValueInPixel(513)
-            expandableListView.layoutParams = layoutParams
+            MainScreenUtils.setListViewHeightBasedOnChildren(expandableListView)
         }
 
         val listViewParameters = findViewById<ListView>(R.id.listViewParameters)
@@ -72,7 +66,7 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    private fun getValueInPixel(dpValue: Int): Int {
+    fun getValueInPixel(dpValue: Int): Int {
         val scale = applicationContext.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
     }
@@ -89,76 +83,77 @@ class MainActivity : AppCompatActivity(){
 
         override fun getGroupCount(): Int { return 1 }
 
-        override fun getChildrenCount(p0: Int): Int { return expListHeadings.length() }
+        override fun getChildrenCount(listPosition: Int): Int { return expListHeadings.length() }
 
-        override fun getGroup(p0: Int): Any {
+        override fun getGroup(listPosition: Int): Any {
             return expListHeadings
         }
 
-        override fun getChild(p0: Int, p1: Int): String? {
+        override fun getChild(listPosition: Int, expListPosition: Int): String? {
             return expListHeadings.getString(0)
         }
 
-        override fun getGroupId(p0: Int): Long {
+        override fun getGroupId(listPosition: Int): Long {
             return 0L
         }
 
-        override fun getChildId(p0: Int, p1: Int): Long {
-            return p1.toLong()
+        override fun getChildId(listPosition: Int, expandedListPosition: Int): Long {
+            return expandedListPosition.toLong()
         }
 
         override fun hasStableIds(): Boolean {
             return true
         }
 
-        override fun getGroupView(p0: Int, p1: Boolean, p2: View?, p3: ViewGroup?): View {
-            var convertView: View
-            if (p2 == null) {
+        override fun getGroupView(listPosition: Int, isExpanded: Boolean,
+                                  convertView: View?, parent: ViewGroup?): View {
+            var myConvertView: View
+            if (convertView == null) {
                 val inflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                convertView = inflater.inflate(R.layout.exp_list_group_view, null)
+                myConvertView = inflater.inflate(R.layout.exp_list_group_view, null)
             }
             else
-                convertView = p2
-            val imageViewIcon = convertView.findViewById<ImageView>(R.id.imageViewIconCalculator)
+                myConvertView = convertView
+            val imageViewIcon = myConvertView.findViewById<ImageView>(R.id.imageViewIconCalculator)
             imageViewIcon.setImageDrawable(mContext.resources.getDrawable(R.drawable.ic_avatars,null))
 
-            val imageArrow = convertView.findViewById<ImageView>(R.id.imageArrow)
-            if (p1)
+            val imageArrow = myConvertView.findViewById<ImageView>(R.id.imageArrow)
+            if (isExpanded)
                 imageArrow.setImageResource(R.drawable.ic_arrow_up)
             else
                 imageArrow.setImageResource(R.drawable.ic_arrow_down)
 
-            return convertView
+            return myConvertView
         }
 
-        override fun getChildView(p0: Int, p1: Int, p2: Boolean, p3: View?, p4: ViewGroup?): View {
-            var convertView: View
+        override fun getChildView(listPosition: Int, expandedListPosition: Int,
+                                  isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
+            var myConvertView: View
 
-            if (p3 == null) {
+            if (convertView == null) {
                 val inflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                convertView = inflater.inflate(R.layout.exp_list_child_view, null)
+                myConvertView = inflater.inflate(R.layout.exp_list_child_view, null)
 
+                val textViewHeading = myConvertView.findViewById<TextView>(R.id.textViewHeading)
+                val textViewSubheading = myConvertView.findViewById<TextView>(R.id.textViewSubheading)
+                val textViewDescription = myConvertView.findViewById<TextView>(R.id.textViewDescription)
+                val textViewCoefficient = myConvertView.findViewById<TextView>(R.id.textViewCoefficient)
 
-                val textViewHeading = convertView.findViewById<TextView>(R.id.textViewHeading)
-                val textViewSubheading = convertView.findViewById<TextView>(R.id.textViewSubheading)
-                val textViewDescription = convertView.findViewById<TextView>(R.id.textViewDescription)
-                val textViewCoefficient = convertView.findViewById<TextView>(R.id.textViewCoefficient)
-
-                textViewHeading.text = expListHeadings.getString(p1)
-                textViewSubheading.text = "(${expListSubheadings.getString(p1)})"
-                textViewDescription.text = expListDescription.getString(p1)
-                if (arrayCoeffs.isNullOrEmpty())
-                    textViewCoefficient.text = expListCoefficients.getString(p1)
+                textViewHeading.text = expListHeadings.getString(expandedListPosition)
+                textViewSubheading.text = "(${expListSubheadings.getString(expandedListPosition)})"
+                textViewDescription.text = expListDescription.getString(expandedListPosition)
+                if (arrayCoeffs == null || arrayCoeffs[expandedListPosition].isEmpty())
+                    textViewCoefficient.text = expListCoefficients.getString(expandedListPosition)
                 else
-                    textViewCoefficient.text = arrayCoeffs[p1]
+                    textViewCoefficient.text = arrayCoeffs[expandedListPosition]
             }
             else
-                convertView = p3
+                myConvertView = convertView
 
-            return convertView
+            return myConvertView
         }
 
-        override fun isChildSelectable(p0: Int, p1: Int): Boolean {
+        override fun isChildSelectable(listPosition: Int, expandedListPosition: Int): Boolean {
             return false
         }
 
