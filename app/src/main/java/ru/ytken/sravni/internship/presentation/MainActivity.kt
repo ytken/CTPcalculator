@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.TypedArray
+import android.database.DataSetObserver
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,9 +35,15 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             .get(MainViewModel::class.java)
 
         val buttonCount = findViewById<Button>(R.id.buttonCount)
-        buttonCount.isEnabled = false
+        buttonCount.isEnabled = true
+
+        val progressBarLoadCoefficients = findViewById<ProgressBar>(R.id.progressBarLoadCoefficients)
+
         buttonCount.setOnClickListener {
-            Toast.makeText(this, "Следующий экран: список страховых", Toast.LENGTH_SHORT).show()
+            vm.load()
+            progressBarLoadCoefficients.visibility = View.VISIBLE
+            buttonCount.isEnabled = false
+            //Toast.makeText(this, "Следующий экран: список страховых", Toast.LENGTH_SHORT).show()
         }
 
         vm.currentFragmentNumber.observe(this, Observer {
@@ -44,7 +51,9 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
                 Log.d(TAG_BACKSTACK, "Replace fragment")
                 val fragment = ParameterBottomSheet(vm, it)
                 val transaction = fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
-                /*supportFragmentManager.beginTransaction()
+
+                /*
+                supportFragmentManager.beginTransaction()
                     .replace(R.id.bottom_sheet, ParameterBottomSheet(vm, it))
                     .addToBackStack(null)
                     .commit()*/
@@ -60,7 +69,11 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         var expandableListAdapter: ExpandableListAdapter = ExpandableListAdapter(applicationContext, vm)
         expandableListView.setAdapter(expandableListAdapter)
         vm.listCoefficient.observe(this, Observer {
-            expandableListAdapter.notifyDataSetChanged()
+            expandableListView.collapseGroup(0)
+            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm))
+            Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
+            progressBarLoadCoefficients.visibility = View.INVISIBLE
+            buttonCount.isEnabled = true
         })
         expandableListView.setOnGroupCollapseListener {
             MainScreenUtils.setListViewHeightBasedOnChildren(expandableListView)
@@ -79,7 +92,6 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         listViewParameters.setOnItemClickListener { _, _, i, _ ->
             vm.setCurrentFragmentNumber(i)
         }
-
     }
 
     fun getValueInPixel(dpValue: Int): Int {
@@ -87,10 +99,10 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         return (dpValue * scale + 0.5f).toInt()
     }
 
-    class ExpandableListAdapter(private val mContext: Context, vm: MainViewModel)
+    class ExpandableListAdapter(private val mContext: Context, val vm: MainViewModel)
         : BaseExpandableListAdapter() {
 
-        private val listCoeffs = vm.listCoefficient.value
+        private var listCoeffs = vm.listCoefficient.value
 
         override fun getGroupCount(): Int { return 1 }
 
@@ -119,6 +131,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         override fun getGroupView(listPosition: Int, isExpanded: Boolean,
                                   convertView: View?, parent: ViewGroup?): View {
             var myConvertView: View
+
             if (convertView == null) {
                 val inflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                 myConvertView = inflater.inflate(R.layout.exp_list_group_view, null)
@@ -136,22 +149,22 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
 
             if (listCoeffs != null) {
                 val BTtextView = myConvertView.findViewById<TextView>(R.id.textViewBT)
-                BTtextView.text = listCoeffs.BT.headerValue
+                BTtextView.text = listCoeffs!!.BT.headerValue
 
                 val KMtextView = myConvertView.findViewById<TextView>(R.id.textViewKM)
-                KMtextView.text = listCoeffs.KM.headerValue
+                KMtextView.text = listCoeffs!!.KM.headerValue
 
                 val KTtextView = myConvertView.findViewById<TextView>(R.id.textViewKT)
-                KTtextView.text = listCoeffs.KT.headerValue
+                KTtextView.text = listCoeffs!!.KT.headerValue
 
                 val KBMtextView = myConvertView.findViewById<TextView>(R.id.textViewKBM)
-                KBMtextView.text = listCoeffs.KBM.headerValue
-
-                val KVStextView = myConvertView.findViewById<TextView>(R.id.textViewKVS)
-                KVStextView.text = listCoeffs.KVS.headerValue
+                KBMtextView.text = listCoeffs!!.KBM.headerValue
 
                 val KOtextView = myConvertView.findViewById<TextView>(R.id.textViewKO)
-                KOtextView.text = listCoeffs.KO.headerValue
+                KOtextView.text = listCoeffs!!.KO.headerValue
+
+                val KVStextView = myConvertView.findViewById<TextView>(R.id.textViewKVS)
+                KVStextView.text = listCoeffs!!.KVS.headerValue
             }
 
             return myConvertView

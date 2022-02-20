@@ -8,4 +8,5 @@
 
     <string name="TAG_number_view" translatable="false">TAG_number_view</string>
     <string name="TAG_LIVE_DATA" translatable="false">TAG_LIVE_DATA</string>
+    <string name="TAG_API" translatable="false">TAG_API</string>
 </resources>

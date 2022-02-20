@@ -1,13 +1,14 @@
 package ru.ytken.sravni.internship.domain.usecase
 
-import ru.ytken.sravni.internship.domain.models.CoefficientParam
-import ru.ytken.sravni.internship.domain.models.ListCoefficientsParam
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
+import ru.ytken.sravni.internship.data.storage.models.ListCoefficientsGet
 import ru.ytken.sravni.internship.domain.repository.ParameterRepository
 
 class GetListOfCoefficientsUseCase(private val parameterRepository: ParameterRepository) {
 
-    fun execute(): ListCoefficientsParam {
-        return parameterRepository.getCoefficients()
+    suspend fun execute(): Response<ListCoefficientsGet> {
+        return parameterRepository.getCoefficientsAsync()
     }
 
 }
