@@ -47,8 +47,18 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         }
 
         vm.currentFragmentNumber.observe(this, Observer {
-            val fragment = ParameterBottomSheet(vm, it)
-            fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
+            if (vm.listParameters.value?.getElementById(it)?.title.equals("userYoungest")) {
+                if (vm.listParameters.value!!.userNumber.value.equals("")) {
+                    if (vm.previousFragmentNumber.value!! > vm.currentFragmentNumber.value!!)
+                        vm.setCurrentFragmentNumber(it - 1)
+                    else
+                        vm.setCurrentFragmentNumber(it + 1)
+                }
+            }
+            else {
+                val fragment = ParameterBottomSheet(vm, it)
+                fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
+            }
         })
 
         val expandableListView = findViewById<ExpandableListView>(R.id.listViewCoefficients)

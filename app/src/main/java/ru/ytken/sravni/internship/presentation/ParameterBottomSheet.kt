@@ -88,6 +88,7 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             nextButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
                 vm.setCurrentFragmentNumber(numberView + 1)
+                vm.setPrevFragmentNumber(numberView)
                 dismiss()
             }
         }
@@ -99,6 +100,7 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             backButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
                 vm.setCurrentFragmentNumber(numberView - 1)
+                vm.setPrevFragmentNumber(numberView)
                 dismiss()
             }
         }

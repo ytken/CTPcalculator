@@ -30,6 +30,9 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
     private var liveCurrentFragmentNumber = MutableLiveData<Int>()
     val currentFragmentNumber = liveCurrentFragmentNumber
 
+    private var livePreviousFragmentNumber = MutableLiveData<Int>()
+    val previousFragmentNumber = livePreviousFragmentNumber
+
     private var liveFragmentDismissed = MutableLiveData(0)
     val fragmentDismissed = liveFragmentDismissed
 
@@ -63,6 +66,10 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
 
     fun setCurrentFragmentNumber(currentFragmentNumber: Int) {
         liveCurrentFragmentNumber.value = currentFragmentNumber
+    }
+
+    fun setPrevFragmentNumber(prevFragmentNumber: Int) {
+        livePreviousFragmentNumber.value = prevFragmentNumber
     }
 
     private fun listCoefficientsGetToListCoefficientsParam(listCoefficientsGet: ListCoefficientsGet): ListCoefficientsParam {
