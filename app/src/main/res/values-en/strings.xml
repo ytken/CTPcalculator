@@ -5,4 +5,5 @@
     <string name="buttonCalculateCTP">Calculate CTP</string>
     <string name="yourCoefficients">Your coefficients</string>
     <string name="buttonNext">Next</string>
+    <string name="buttonNextFinish">Confirm</string>
 </resources>

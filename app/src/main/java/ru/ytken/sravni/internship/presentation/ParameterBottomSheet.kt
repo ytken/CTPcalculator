@@ -10,27 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import okhttp3.internal.wait
 import ru.ytken.sravni.internship.R
+import ru.ytken.sravni.internship.domain.models.ParameterParam
 
-class ParameterBottomSheet(val vm: MainViewModel): BottomSheetDialogFragment() {
+class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSheetDialogFragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.bottom_sheet_edit, container, false)
-    }
+    val LOGTAG = "LOGTAGParameterBottomSheet"
 
     private lateinit var behavior: BottomSheetBehavior<View>
-
-    override fun onStart() {
-        super.onStart()
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -40,34 +32,41 @@ class ParameterBottomSheet(val vm: MainViewModel): BottomSheetDialogFragment() {
 
         behavior = BottomSheetBehavior.from(view.parent as View)
         behavior.skipCollapsed = true
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         return dialog
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.bottom_sheet_edit, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val numberView = arguments?.getInt(resources.getString(R.string.TAG_number_view))
-        val editTextHint: TypedArray = resources.obtainTypedArray(R.array.listview_hints)
-
+        val parameterShow = vm.listParameters.value?.getElementById(numberView) ?:
+                            ParameterParam("title", "value", "hint", "type", "dimension")
 
         val textViewHeading = view.findViewById<TextView>(R.id.textViewBottomHeading)
-        textViewHeading.text = numberView?.let { editTextHint.getString(it) }
+        textViewHeading.text = parameterShow.hint
 
         val editTextCoeff = view.findViewById<EditText>(R.id.editTextCoefficient)
-        val expInputTypeNumber = resources.getStringArray(R.array.listview_input_type)
-        if (numberView != null)
-        if (expInputTypeNumber[numberView].equals("number"))
+        if (parameterShow.type.equals("number"))
             editTextCoeff.inputType = InputType.TYPE_CLASS_NUMBER
         else
             editTextCoeff.inputType = InputType.TYPE_CLASS_TEXT
+
         editTextCoeff.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
-                saveAndNext(numberView ?: 0, editTextCoeff.text.toString())
+                saveParameter(editTextCoeff.text.toString())
             }
             false
         }
         editTextCoeff.imeOptions = EditorInfo.IME_ACTION_DONE
-        val keepedValue = numberView?.let { vm.listParameters.value?.get(it) }
+        val keepedValue = parameterShow.value
         if (keepedValue != null && keepedValue.isNotEmpty())
             editTextCoeff.setText(keepedValue)
         editTextCoeff.requestFocus()
@@ -76,22 +75,47 @@ class ParameterBottomSheet(val vm: MainViewModel): BottomSheetDialogFragment() {
         buttonClearEditText.setOnClickListener { editTextCoeff.setText("") }
 
         val nextButton = view.findViewById<Button>(R.id.buttonNextCoeff)
-        nextButton.setOnClickListener { saveAndNext(numberView ?: 0, editTextCoeff.text.toString()) }
+
+        if (numberView == (vm.listParameters.value?.getSize() ?: 0) - 1) {
+            nextButton.text = getString(R.string.buttonNextFinish)
+            nextButton.setOnClickListener {
+                saveParameter(editTextCoeff.text.toString())
+                callApi()
+            }
+        }
+        else {
+            nextButton.setOnClickListener {
+                saveParameter(editTextCoeff.text.toString())
+                vm.setCurrentFragmentNumber(numberView + 1)
+                dismiss()
+            }
+        }
+
+        val backButton = view.findViewById<ImageButton>(R.id.imageButtonBottomBack)
+
+        if (numberView > 0) {
+            backButton.visibility = View.VISIBLE
+            backButton.setOnClickListener {
+                saveParameter(editTextCoeff.text.toString())
+                vm.setCurrentFragmentNumber(numberView - 1)
+                dismiss()
+            }
+        }
+        else
+            backButton.visibility = View.INVISIBLE
     }
 
-    private fun saveAndNext(numberLine: Int, value: String) {
-        Log.d(resources.getString(R.string.TAG_LIVE_DATA), "Saving in bottom sheet")
-        var arrayParameters = vm.listParameters.value
-        if(arrayParameters.isNullOrEmpty())
-            arrayParameters = Array(resources.getStringArray(R.array.listview_hints).size) {""}
-        arrayParameters[numberLine] = value
-        Log.d(resources.getString(R.string.TAG_LIVE_DATA), "Set to element $numberLine value ${arrayParameters[numberLine]}")
-        vm.save(arrayParameters)
+    private fun saveParameter(value: String) {
+        var listParameters = vm.listParameters.value
+        if (listParameters != null) {
+            listParameters.setValueForElement(numberView, value)
+            vm.save(listParameters)
+        }
+    }
+
+    private fun callApi() {
+        Log.d(LOGTAG, "Call Api")
         dismiss()
     }
-
-    /*override fun getTheme(): Int {
-        return R.style.Theme_App
-    */
 
 }

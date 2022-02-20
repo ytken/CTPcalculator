@@ -1,12 +1,14 @@
 package ru.ytken.sravni.internship.domain.repository
 
-import ru.ytken.sravni.internship.domain.models.ListOfCoefficientsParam
-import ru.ytken.sravni.internship.domain.models.SaveParametersParam
+import ru.ytken.sravni.internship.domain.models.CoefficientParam
+import ru.ytken.sravni.internship.domain.models.ListCoefficientsParam
+import ru.ytken.sravni.internship.domain.models.ListParametersParam
+import ru.ytken.sravni.internship.domain.models.ParameterParam
 
 interface ParameterRepository {
 
-    fun getCoefficients() : ListOfCoefficientsParam
+    fun getCoefficients() : ListCoefficientsParam
 
-    fun saveParameters(saveParametersParam: SaveParametersParam): Boolean
+    fun saveParameters(listParameterParam: ListParametersParam): Boolean
 
 }

@@ -36,6 +36,7 @@
             android:background="@drawable/bottom_sheet_edit_text"
             android:inputType="text"
             android:maxLines="1"
+            android:maxLength="30"
             android:paddingLeft="20dp"
             android:textColor="@color/dark_100"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,13 +68,16 @@
 
         <Button
             android:id="@+id/buttonNextCoeff"
-            android:layout_width="105dp"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginRight="@dimen/padding_sides"
             android:layout_marginBottom="@dimen/padding_sides"
+            android:paddingLeft="@dimen/padding_sides"
+            android:paddingRight="12dp"
             android:background="@drawable/main_button_selector"
             android:enabled="true"
             android:text="@string/buttonNext"
+            android:textSize="@dimen/normalTextSize1"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

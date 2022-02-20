@@ -1,5 +1,9 @@
 package ru.ytken.sravni.internship.data.storage.models
 
-class Coefficient(val BT: String, val KM: String,
-                  val KT: String, val KBM: String,
-                  val KVS: String, val KO: String)
+data class Coefficient(
+    val title: String,
+    val headerValue: String,
+    val value: String,
+    val name: String,
+    val detailText: String
+    )
