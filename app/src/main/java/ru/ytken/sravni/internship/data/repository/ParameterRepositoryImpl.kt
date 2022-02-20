@@ -3,6 +3,7 @@ package ru.ytken.sravni.internship.data.repository
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +21,8 @@ class ParameterRepositoryImpl(val context: Context) :ParameterRepository {
             ApiStorage.api.get()
         }.await()
 
-    override fun saveParameters(listParametersPost: ListParametersPost): Boolean {
-        return ApiStorage.api.send(listParametersPost)
-    }
+    override suspend fun saveParameters(listParametersPost: ListParametersPost) : Response<ResponseBody> =
+        CoroutineScope(Dispatchers.IO).async {
+            ApiStorage.api.send(listParametersPost)
+        }.await()
 }

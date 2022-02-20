@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
     private lateinit var vm: MainViewModel
     private val TAG_INIT_FRAGMENT = "TAG_INIT_FRAGMENT"
 
+    val LOGTAG = "LOGTAGMainActivity"
+
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,52 +37,34 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
             .get(MainViewModel::class.java)
 
         val buttonCount = findViewById<Button>(R.id.buttonCount)
-        buttonCount.isEnabled = true
+        buttonCount.isEnabled = false
 
         val progressBarLoadCoefficients = findViewById<ProgressBar>(R.id.progressBarLoadCoefficients)
+        progressBarLoadCoefficients.visibility = View.INVISIBLE
 
         buttonCount.setOnClickListener {
-            vm.load()
-            progressBarLoadCoefficients.visibility = View.VISIBLE
-            buttonCount.isEnabled = false
-            //Toast.makeText(this, "Следующий экран: список страховых", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Следующий экран: список страховых", Toast.LENGTH_SHORT).show()
         }
 
         vm.currentFragmentNumber.observe(this, Observer {
-            if (supportFragmentManager.findFragmentByTag(TAG_INIT_FRAGMENT) != null){
-                Log.d(TAG_BACKSTACK, "Replace fragment")
-                val fragment = ParameterBottomSheet(vm, it)
-                val transaction = fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
-
-                /*
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.bottom_sheet, ParameterBottomSheet(vm, it))
-                    .addToBackStack(null)
-                    .commit()*/
-            }
-            else {
-                Log.d(TAG_BACKSTACK, "Create new fragment")
-                val fragment = ParameterBottomSheet(vm, it)
-                val transaction = fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
-            }
+            val fragment = ParameterBottomSheet(vm, it)
+            fragment.show(supportFragmentManager, TAG_INIT_FRAGMENT)
         })
 
         val expandableListView = findViewById<ExpandableListView>(R.id.listViewCoefficients)
         var expandableListAdapter: ExpandableListAdapter = ExpandableListAdapter(applicationContext, vm)
         expandableListView.setAdapter(expandableListAdapter)
-        vm.listCoefficient.observe(this, Observer {
-            expandableListView.collapseGroup(0)
-            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm))
-            Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
-            progressBarLoadCoefficients.visibility = View.INVISIBLE
-            buttonCount.isEnabled = true
-        })
         expandableListView.setOnGroupCollapseListener {
             MainScreenUtils.setListViewHeightBasedOnChildren(expandableListView)
         }
         expandableListView.setOnGroupExpandListener {
             MainScreenUtils.setListViewHeightBasedOnChildren(expandableListView)
         }
+        vm.listCoefficient.observe(this, Observer {
+            expandableListView.collapseGroup(0)
+            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm))
+            Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
+        })
 
         val listViewParameters = findViewById<ListView>(R.id.listViewParameters)
         var listViewAdapter = ParameterListAdapter(this, vm)
@@ -92,11 +76,33 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         listViewParameters.setOnItemClickListener { _, _, i, _ ->
             vm.setCurrentFragmentNumber(i)
         }
+
+        vm.fragmentDismissed.observe(this, Observer {
+            if (it>0) {
+                callApi()
+                buttonCount.isEnabled = false
+                progressBarLoadCoefficients.visibility = View.VISIBLE
+            }
+
+        })
+
+        vm.responseFromApi.observe(this, Observer {
+            if (it>0){
+                buttonCount.isEnabled = true
+                progressBarLoadCoefficients.visibility = View.INVISIBLE
+            }
+        })
     }
 
     fun getValueInPixel(dpValue: Int): Int {
         val scale = applicationContext.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
+    }
+
+
+    private fun callApi() {
+        Log.d(LOGTAG, "Call Api")
+        vm.save()
     }
 
     class ExpandableListAdapter(private val mContext: Context, val vm: MainViewModel)

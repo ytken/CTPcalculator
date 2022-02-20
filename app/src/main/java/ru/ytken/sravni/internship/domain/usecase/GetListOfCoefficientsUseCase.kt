@@ -1,6 +1,5 @@
 package ru.ytken.sravni.internship.domain.usecase
 
-import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import ru.ytken.sravni.internship.data.storage.models.ListCoefficientsGet
 import ru.ytken.sravni.internship.domain.repository.ParameterRepository

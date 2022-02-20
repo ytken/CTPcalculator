@@ -19,6 +19,13 @@ class ListParametersParam(
         return 6
     }
 
+    fun toArray() : Array<ParameterParam> {
+        return arrayOf(userCity, userCapacity,
+            userNumber, userYoungest,
+            userMinExp, userNoCrush
+        )
+    }
+
     fun getElementById(id: Int) : ParameterParam {
         val parameterShow = when (id) {
             0 -> userCity

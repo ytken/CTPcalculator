@@ -1,6 +1,7 @@
 package ru.ytken.sravni.internship.presentation
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.res.TypedArray
 import android.os.Bundle
 import android.text.InputType
@@ -20,9 +21,8 @@ import ru.ytken.sravni.internship.domain.models.ParameterParam
 
 class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSheetDialogFragment() {
 
-    val LOGTAG = "LOGTAGParameterBottomSheet"
-
     private lateinit var behavior: BottomSheetBehavior<View>
+    private lateinit var editTextCoeff: EditText
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -53,7 +53,7 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
         val textViewHeading = view.findViewById<TextView>(R.id.textViewBottomHeading)
         textViewHeading.text = parameterShow.hint
 
-        val editTextCoeff = view.findViewById<EditText>(R.id.editTextCoefficient)
+        editTextCoeff = view.findViewById<EditText>(R.id.editTextCoefficient)
         if (parameterShow.type.equals("number"))
             editTextCoeff.inputType = InputType.TYPE_CLASS_NUMBER
         else
@@ -80,7 +80,8 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             nextButton.text = getString(R.string.buttonNextFinish)
             nextButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
-                callApi()
+                vm.fragmentDismissed()
+                dismiss()
             }
         }
         else {
@@ -105,17 +106,18 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             backButton.visibility = View.INVISIBLE
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        saveParameter(editTextCoeff.text.toString())
+        vm.fragmentDismissed()
+        super.onCancel(dialog)
+    }
+
     private fun saveParameter(value: String) {
         var listParameters = vm.listParameters.value
         if (listParameters != null) {
             listParameters.setValueForElement(numberView, value)
-            vm.save(listParameters)
+            vm.saveParameter(listParameters)
         }
-    }
-
-    private fun callApi() {
-        Log.d(LOGTAG, "Call Api")
-        dismiss()
     }
 
 }

@@ -13,7 +13,6 @@ import ru.ytken.sravni.internship.data.storage.models.Parameter
 import ru.ytken.sravni.internship.domain.models.CoefficientParam
 import ru.ytken.sravni.internship.domain.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.models.ListParametersParam
-import ru.ytken.sravni.internship.domain.models.ParameterParam
 import ru.ytken.sravni.internship.domain.usecase.GetListOfCoefficientsUseCase
 import ru.ytken.sravni.internship.domain.usecase.SaveParametersUseCase
 
@@ -31,9 +30,30 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
     private var liveCurrentFragmentNumber = MutableLiveData<Int>()
     val currentFragmentNumber = liveCurrentFragmentNumber
 
-    fun save(listParametersParam: ListParametersParam) {
+    private var liveFragmentDismissed = MutableLiveData(0)
+    val fragmentDismissed = liveFragmentDismissed
+
+    private var liveResponseFromApi = MutableLiveData(0)
+    val responseFromApi = liveResponseFromApi
+
+    //я очень за это извиняюсь, не успевала по времени сделать нормально
+    fun fragmentDismissed() {
+        liveFragmentDismissed.value = liveFragmentDismissed.value?.plus(1)
+    }
+
+    fun saveParameter(listParametersParam: ListParametersParam) {
         liveListParameters.value = listParametersParam
-        //val result = saveParametersUseCase.execute(listParametersParamToListParametersPost(listParametersParam))
+    }
+
+    fun save() = viewModelScope.launch {
+        val result = liveListParameters.value?.let {
+            listParametersParamToListParametersPost(it)
+        }?.let { saveParametersUseCase.execute(it) }
+        if (result != null) {
+            responseFromApi.value = responseFromApi.value?.plus(1)
+            if (result.isSuccessful)
+                load()
+        }
     }
 
     fun load() = viewModelScope.launch {
@@ -83,14 +103,11 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
     }
 
     private fun listParametersParamToListParametersPost(listParameterParam: ListParametersParam) : ListParametersPost {
-        return ListParametersPost(
-            List(listParameterParam.getSize())
-            {i -> {
-                val parameter : ParameterParam = listParameterParam.getElementById(i)
-                Parameter(parameter.title, parameter.value)
-            }
-            }
-        )
+        val initArray = listParameterParam.toArray()
+        val arrayParameter: Array<Parameter> = Array(initArray.size) {
+                i -> Parameter(initArray[i].title, initArray[i].value)
+        }
+        return ListParametersPost(arrayParameter)
     }
 
 }
