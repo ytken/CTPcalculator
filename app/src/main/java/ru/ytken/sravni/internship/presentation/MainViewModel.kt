@@ -1,11 +1,9 @@
 package ru.ytken.sravni.internship.presentation
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.data.storage.models.Coefficient
 import ru.ytken.sravni.internship.data.storage.models.ListCoefficientsGet
 import ru.ytken.sravni.internship.data.storage.models.ListParametersPost
@@ -17,32 +15,19 @@ import ru.ytken.sravni.internship.domain.usecase.GetListOfCoefficientsUseCase
 import ru.ytken.sravni.internship.domain.usecase.SaveParametersUseCase
 
 class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCase,
-                    val saveParametersUseCase: SaveParametersUseCase,
-                    initListParameters: ListParametersParam,
-                    initListCoefficients: ListCoefficientsParam): ViewModel() {
+                    val saveParametersUseCase: SaveParametersUseCase): ViewModel() {
 
-    private var liveListCoefficient = MutableLiveData(initListCoefficients)
+    private var liveListCoefficient = MutableLiveData(ListCoefficientsParam())
     val listCoefficient = liveListCoefficient
 
-    private var liveListParameters = MutableLiveData(initListParameters)
+    private var liveListParameters = MutableLiveData(ListParametersParam())
     val listParameters = liveListParameters
 
     private var liveCurrentFragmentNumber = MutableLiveData<Int>()
     val currentFragmentNumber = liveCurrentFragmentNumber
 
-    private var livePreviousFragmentNumber = MutableLiveData<Int>()
-    val previousFragmentNumber = livePreviousFragmentNumber
-
-    private var liveFragmentDismissed = MutableLiveData(0)
-    val fragmentDismissed = liveFragmentDismissed
-
-    private var liveResponseFromApi = MutableLiveData(0)
+    private var liveResponseFromApi = MutableLiveData<Boolean>()
     val responseFromApi = liveResponseFromApi
-
-    //я очень за это извиняюсь, не успевала по времени сделать нормально
-    fun fragmentDismissed() {
-        liveFragmentDismissed.value = liveFragmentDismissed.value?.plus(1)
-    }
 
     fun saveParameter(listParametersParam: ListParametersParam) {
         liveListParameters.value = listParametersParam
@@ -53,7 +38,7 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
             listParametersParamToListParametersPost(it)
         }?.let { saveParametersUseCase.execute(it) }
         if (result != null) {
-            responseFromApi.value = responseFromApi.value?.plus(1)
+            responseFromApi.value = result.isSuccessful
             if (result.isSuccessful)
                 load()
         }
@@ -66,10 +51,6 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
 
     fun setCurrentFragmentNumber(currentFragmentNumber: Int) {
         liveCurrentFragmentNumber.value = currentFragmentNumber
-    }
-
-    fun setPrevFragmentNumber(prevFragmentNumber: Int) {
-        livePreviousFragmentNumber.value = prevFragmentNumber
     }
 
     private fun listCoefficientsGetToListCoefficientsParam(listCoefficientsGet: ListCoefficientsGet): ListCoefficientsParam {

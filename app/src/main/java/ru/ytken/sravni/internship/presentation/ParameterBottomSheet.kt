@@ -1,33 +1,44 @@
 package ru.ytken.sravni.internship.presentation
 
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
-import android.content.res.TypedArray
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import okhttp3.internal.wait
 import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.domain.models.ParameterParam
+import java.lang.RuntimeException
 
-class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSheetDialogFragment() {
+
+class ParameterBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var behavior: BottomSheetBehavior<View>
     private lateinit var editTextCoeff: EditText
+
+    private val vm by activityViewModels<MainViewModel>()
+
+    var mChangeDialog: ChangeDialog? = null
+
+    interface ChangeDialog {
+        fun setNextDialog(numberView: Int)
+        fun setPreviousDialog(numberView: Int)
+        fun onFragmentDismissed()
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
 
         val view = View.inflate(requireContext(), R.layout.bottom_sheet_edit, null)
+
         dialog.setContentView(view)
 
         behavior = BottomSheetBehavior.from(view.parent as View)
@@ -45,8 +56,21 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
         return inflater.inflate(R.layout.bottom_sheet_edit, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is ChangeDialog)
+            mChangeDialog = context as ChangeDialog
+        else
+            throw RuntimeException("$context must implement SampleCallback")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val numberView: Int =
+            if (vm.currentFragmentNumber.value != null)
+                vm.currentFragmentNumber.value!!
+            else 0
+
         val parameterShow = vm.listParameters.value?.getElementById(numberView) ?:
                             ParameterParam("title", "value", "hint", "type", "dimension")
 
@@ -80,15 +104,14 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             nextButton.text = getString(R.string.buttonNextFinish)
             nextButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
-                vm.fragmentDismissed()
+                mChangeDialog?.onFragmentDismissed()
                 dismiss()
             }
         }
         else {
             nextButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
-                vm.setCurrentFragmentNumber(numberView + 1)
-                vm.setPrevFragmentNumber(numberView)
+                mChangeDialog?.setNextDialog(numberView)
                 dismiss()
             }
         }
@@ -99,8 +122,7 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
             backButton.visibility = View.VISIBLE
             backButton.setOnClickListener {
                 saveParameter(editTextCoeff.text.toString())
-                vm.setCurrentFragmentNumber(numberView - 1)
-                vm.setPrevFragmentNumber(numberView)
+                mChangeDialog?.setPreviousDialog(numberView)
                 dismiss()
             }
         }
@@ -110,16 +132,24 @@ class ParameterBottomSheet(val vm: MainViewModel, val numberView: Int): BottomSh
 
     override fun onCancel(dialog: DialogInterface) {
         saveParameter(editTextCoeff.text.toString())
-        vm.fragmentDismissed()
+        mChangeDialog?.onFragmentDismissed()
         super.onCancel(dialog)
     }
 
     private fun saveParameter(value: String) {
-        var listParameters = vm.listParameters.value
+        val numberView: Int = if (vm.currentFragmentNumber.value != null)
+            vm.currentFragmentNumber.value!!
+        else 0
+        val listParameters = vm.listParameters.value
         if (listParameters != null) {
             listParameters.setValueForElement(numberView, value)
             vm.saveParameter(listParameters)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mChangeDialog = null
     }
 
 }

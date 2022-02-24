@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/bottom_sheet_edit_text.xml" value="0.13" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/field_selector.xml" value="0.3505" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_arrow_down.xml" value="0.3505" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_avatars.xml" value="0.3505" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_buttons.xml" value="0.162" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/main_button_selector.xml" value="0.168" />
@@ -27,6 +28,7 @@
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
