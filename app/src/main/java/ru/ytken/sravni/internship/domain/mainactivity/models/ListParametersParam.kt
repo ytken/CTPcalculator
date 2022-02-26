@@ -1,4 +1,4 @@
-package ru.ytken.sravni.internship.domain.models
+package ru.ytken.sravni.internship.domain.mainactivity.models
 
 class ListParametersParam(
     var userCity: ParameterParam = ParameterParam("userCity", "",

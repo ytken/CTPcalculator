@@ -6,4 +6,7 @@
     <string name="yourCoefficients">Your coefficients</string>
     <string name="buttonNext">Next</string>
     <string name="buttonNextFinish">Confirm</string>
+    <string name="headingInsurers">Policy price calculation</string>
+    <string name="buttonCalculateExactPrice">Calculate the exact price and buy</string>
+    <string name="stringEmptyJson">Not defined</string>
 </resources>

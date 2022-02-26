@@ -1,8 +1,10 @@
 package ru.ytken.sravni.internship.di
 
 import org.koin.dsl.module
-import ru.ytken.sravni.internship.domain.usecase.GetListOfCoefficientsUseCase
-import ru.ytken.sravni.internship.domain.usecase.SaveParametersUseCase
+import ru.ytken.sravni.internship.domain.insurersactivity.usecase.GetListOfInsurersUseCase
+import ru.ytken.sravni.internship.domain.insurersactivity.usecase.SaveListOfCoefficientsUseCase
+import ru.ytken.sravni.internship.domain.mainactivity.usecase.GetListOfCoefficientsUseCase
+import ru.ytken.sravni.internship.domain.mainactivity.usecase.SaveParametersUseCase
 
 val domainModule = module {
 
@@ -12,6 +14,14 @@ val domainModule = module {
 
     factory<SaveParametersUseCase> {
         SaveParametersUseCase(parameterRepository = get())
+    }
+
+    factory<GetListOfInsurersUseCase> {
+        GetListOfInsurersUseCase(parameterRepository = get())
+    }
+
+    factory<SaveListOfCoefficientsUseCase> {
+        SaveListOfCoefficientsUseCase(parameterRepository = get())
     }
 
 }

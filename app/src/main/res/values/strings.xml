@@ -5,8 +5,12 @@
     <string name="yourCoefficients">Ваши коэффициенты</string>
     <string name="buttonNext">Далее  ⇀</string>
     <string name="buttonNextFinish">Подтвердить</string>
+    <string name="headingInsurers">Расчёт цены полиса</string>
+    <string name="buttonCalculateExactPrice">Рассчитать точную цену и купить</string>
+    <string name="stringEmptyJson">Не определено</string>
 
     <string name="TAG_number_view" translatable="false">TAG_number_view</string>
     <string name="TAG_LIVE_DATA" translatable="false">TAG_LIVE_DATA</string>
     <string name="TAG_API" translatable="false">TAG_API</string>
+    <string name="TAG_send_coeffs" translatable="false">TAG_send_coeffs</string>
 </resources>

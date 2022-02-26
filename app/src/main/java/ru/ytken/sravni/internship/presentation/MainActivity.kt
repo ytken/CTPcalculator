@@ -2,8 +2,11 @@ package ru.ytken.sravni.internship.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +20,7 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
 
     private val vm by viewModel<MainViewModel>()
     private val TAG_INIT_FRAGMENT = "TAG_INIT_FRAGMENT"
-
-    val LOGTAG = "LOGTAGMainActivity"
+    private val LOGTAG = "LOGTAGMainActivity"
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +34,9 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
         progressBarLoadCoefficients.visibility = View.INVISIBLE
 
         buttonCount.setOnClickListener {
-            Toast.makeText(this, "Следующий экран: список страховых", Toast.LENGTH_SHORT).show()
+            val insurersIntent = Intent(this, InsurersActivity::class.java)
+            insurersIntent.putExtra(getString(R.string.TAG_send_coeffs), vm.listCoefficient.value)
+            startActivity(insurersIntent)
         }
 
         vm.currentFragmentNumber.observe(this, Observer {
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
         })
 
         val expandableListView = findViewById<ExpandableListView>(R.id.listViewCoefficients)
-        var expandableListAdapter: ExpandableListAdapter = ExpandableListAdapter(applicationContext, vm)
+        var expandableListAdapter: ExpandableListAdapter = ExpandableListAdapter(applicationContext, vm.listCoefficient.value!!)
         expandableListView.setAdapter(expandableListAdapter)
         expandableListView.setOnGroupCollapseListener {
             MainScreenUtils.setExpandableListViewHeightBasedOnChildren(expandableListView)
@@ -51,12 +55,12 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
         }
         vm.listCoefficient.observe(this, Observer {
             expandableListView.collapseGroup(0)
-            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm))
+            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm.listCoefficient.value!!))
             Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
         })
 
         val listViewParameters = findViewById<ListView>(R.id.listViewParameters)
-        var listViewAdapter = ParameterListAdapter(this, vm)
+        val listViewAdapter = ParameterListAdapter(this, vm)
         listViewParameters.adapter = listViewAdapter
         vm.listParameters.observe(this, Observer {
             listViewAdapter.notifyDataSetChanged()

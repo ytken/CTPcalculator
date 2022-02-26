@@ -3,6 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
 android {
     compileSdk 31
 
@@ -12,7 +19,6 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -63,4 +69,7 @@ dependencies {
 
     def fragment_version = "1.4.1"
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+    implementation("io.coil-kt:coil:0.12.0")
+    implementation("io.coil-kt:coil-svg:0.12.0")
 }

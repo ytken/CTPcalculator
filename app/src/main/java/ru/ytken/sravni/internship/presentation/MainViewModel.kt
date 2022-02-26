@@ -4,18 +4,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import ru.ytken.sravni.internship.data.storage.models.Coefficient
-import ru.ytken.sravni.internship.data.storage.models.ListCoefficientsGet
-import ru.ytken.sravni.internship.data.storage.models.ListParametersPost
-import ru.ytken.sravni.internship.data.storage.models.Parameter
-import ru.ytken.sravni.internship.domain.models.CoefficientParam
-import ru.ytken.sravni.internship.domain.models.ListCoefficientsParam
-import ru.ytken.sravni.internship.domain.models.ListParametersParam
-import ru.ytken.sravni.internship.domain.usecase.GetListOfCoefficientsUseCase
-import ru.ytken.sravni.internship.domain.usecase.SaveParametersUseCase
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.Coefficient
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListCoefficientsGet
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListParametersPost
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.Parameter
+import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ListParametersParam
+import ru.ytken.sravni.internship.domain.mainactivity.usecase.GetListOfCoefficientsUseCase
+import ru.ytken.sravni.internship.domain.mainactivity.usecase.SaveParametersUseCase
 
 class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCase,
-                    val saveParametersUseCase: SaveParametersUseCase): ViewModel() {
+                    val saveParametersUseCase: SaveParametersUseCase
+): ViewModel() {
 
     private var liveListCoefficient = MutableLiveData(ListCoefficientsParam())
     val listCoefficient = liveListCoefficient

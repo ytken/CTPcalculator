@@ -1,4 +1,4 @@
-package ru.ytken.sravni.internship.data.storage.models
+package ru.ytken.sravni.internship.data.storage.models.mainactivity
 
 class Coefficient(
     var title: String,

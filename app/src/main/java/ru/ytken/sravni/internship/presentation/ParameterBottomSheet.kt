@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.ytken.sravni.internship.R
-import ru.ytken.sravni.internship.domain.models.ParameterParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParam
 import java.lang.RuntimeException
 
 
@@ -61,7 +61,7 @@ class ParameterBottomSheet : BottomSheetDialogFragment() {
         if (context is ChangeDialog)
             mChangeDialog = context as ChangeDialog
         else
-            throw RuntimeException("$context must implement SampleCallback")
+            throw RuntimeException("$context must implement ChangeDialog")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

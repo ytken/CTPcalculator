@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.ListView
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 
 object MainScreenUtils {
 
@@ -38,9 +40,9 @@ object MainScreenUtils {
         for (i in 0 until adapter.count) {
             val listItem = adapter.getView(i, null, listView)
             listItem.measure(0, 0)
-            totalHeight += listItem.measuredHeight
+            totalHeight += listItem.measuredHeight + listItem.marginTop + listItem.marginBottom
         }
-        return totalHeight + (listView.dividerHeight * (adapter.count -1)) + listView.paddingTop + listView.paddingBottom
+        return totalHeight + (listView.dividerHeight * (adapter.count - 1)) + listView.paddingTop + listView.paddingBottom
     }
 
     private fun setListViewHeight(listView: ListView, height: Int) {

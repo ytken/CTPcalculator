@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_sides"
         android:paddingLeft="@dimen/padding_sides"
-        android:paddingTop="@dimen/padding_top"
+        android:paddingTop="@dimen/padding_top_main"
         android:paddingRight="@dimen/padding_sides"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"

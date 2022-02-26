@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="@dimen/padding_sides"
     android:paddingRight="@dimen/padding_sides"
-    android:background="@drawable/rounded_template_gray"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/background"
     app:cardElevation="0dp"
@@ -36,7 +35,7 @@
         android:layout_gravity="bottom"
         android:text="Znach"
         android:textSize="@dimen/normalTextSize2"
-        android:textColor="@color/main_text"
+        android:textColor="@color/Main_100"
         android:gravity="center_vertical"/>
 
 </androidx.cardview.widget.CardView>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/padding_sides"
+    android:paddingRight="@dimen/padding_sides"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="12dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_sides">
+
+        <ImageView
+            android:id="@+id/imageViewIconBank"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+        <TextView
+            android:id="@+id/textViewNameBank"
+            style="@style/bankName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/imageViewIconBank"
+            android:text="@string/stringEmptyJson" />
+
+        <ImageView
+            android:id="@+id/imageViewStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/textViewNameBank"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="1dp"
+            app:srcCompat="@drawable/ic_star" />
+
+        <TextView
+            android:id="@+id/textViewBankRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5.5dp"
+            android:layout_toRightOf="@id/imageViewStar"
+            android:text="@string/stringEmptyJson"
+            android:textColor="@color/Main_100"
+            android:textSize="@dimen/smallTextSize" />
+
+        <TextView
+            android:id="@+id/textViewInsuranceCost"
+            style="@style/priceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/stringEmptyJson" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

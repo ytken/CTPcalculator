@@ -8,14 +8,14 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import ru.ytken.sravni.internship.R
-import ru.ytken.sravni.internship.domain.models.CoefficientParam
-import ru.ytken.sravni.internship.domain.models.ListCoefficientsParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 
-class ExpandableListAdapter(context: Context, vm: MainViewModel)
+class ExpandableListAdapter(context: Context, listCoefficientsParam: ListCoefficientsParam)
     : BaseExpandableListAdapter() {
 
     private val mContext = context
-    private val listCoeffs = vm.listCoefficient.value
+    private val listCoeffs = listCoefficientsParam
 
     override fun getGroupCount(): Int { return 1 }
 

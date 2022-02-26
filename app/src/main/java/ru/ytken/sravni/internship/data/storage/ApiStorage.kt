@@ -8,10 +8,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
-import ru.ytken.sravni.internship.data.storage.models.ListCoefficientsGet
-import ru.ytken.sravni.internship.data.storage.models.ListParametersPost
+import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListCoefficientsPost
+import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListInsurersGet
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListCoefficientsGet
+import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListParametersPost
 
 interface ApiStorage {
 
@@ -37,7 +38,13 @@ interface ApiStorage {
     @GET("/mobile/internship/v1/osago/rationDetail")
     suspend fun get() : Response<ListCoefficientsGet>
 
+    @GET("/mobile/internship/v1/osago/startCalculation")
+    suspend fun getInsurers() : Response<ListInsurersGet>
+
     @POST("/mobile/internship/v1/osago/rationDetail")
     suspend fun send(@Body parameterList: ListParametersPost): Response<ResponseBody>
+
+    @POST("/mobile/internship/v1/osago/startCalculation")
+    suspend fun sendCoeffs(@Body listCoefficientsPost: ListCoefficientsPost): Response<ResponseBody>
 
 }

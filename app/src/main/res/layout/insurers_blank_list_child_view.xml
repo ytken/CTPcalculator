@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:paddingLeft="@dimen/padding_sides"
+    android:paddingRight="@dimen/padding_sides"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="12dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_sides">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@color/background" />
+
+        <ImageView
+            android:id="@+id/textView1"
+            style="@style/bankName"
+            android:background="@color/background"
+            android:layout_width="150dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/imageView1" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="150dp"
+            android:layout_height="14dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/background"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/imageView1" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="82dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/background" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

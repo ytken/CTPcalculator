@@ -34,6 +34,24 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="headingInsurersActivity" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/headingInsurersText</item>
+        <item name="android:textColor">@color/almostBlack</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="bankName" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/bankName</item>
+        <item name="android:textColor">@color/Main_100</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="priceValue" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/Main_100</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
     </style>
 
