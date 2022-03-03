@@ -28,6 +28,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/main_button_selector"
             android:enabled="false"
+            style="@style/ButtonColor"
             android:text="@string/buttonCalculateExactPrice"
             android:textAllCaps="false" />
 
@@ -109,17 +110,20 @@
                     android:layout_marginLeft="@dimen/padding_sides"
                     android:layout_marginRight="@dimen/padding_sides"/>
 
-                <ListView
+                <LinearLayout
                     android:id="@+id/listViewInsurers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/verticalMargins"
+                    android:paddingTop="@dimen/topMargin"
+                    android:paddingBottom="@dimen/bottomListMargin"
                     android:background="@color/background"
-                    android:divider="@color/background"
-                    android:dividerHeight="11dp"
+                    android:showDividers="middle"
+                    android:divider="@drawable/list_insurers_divider"
                     android:listSelector="@android:color/transparent"
                     android:paddingLeft="@dimen/padding_sides"
-                    android:paddingRight="@dimen/padding_sides"/>
+                    android:paddingRight="@dimen/padding_sides"
+                    android:clipToPadding="false"
+                    android:orientation="vertical" />
 
             </LinearLayout>
 

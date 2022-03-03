@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CTPcalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar"> DayNight.NoActionBar
+    <style name="Theme.CTPcalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge"> DayNight.NoActionBar
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_accent</item>
         <item name="colorPrimaryVariant">@color/background</item>
@@ -15,6 +15,7 @@
         <item name="background">@color/background</item>
 
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
     </style>
 
     <style name="textCoeffStyle" parent="TextAppearance.AppCompat">
@@ -65,6 +66,12 @@
 
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/top_rounded_template_white</item>
+    </style>
+
+    <style name="ButtonColor" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/main_button_text_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/main_button_selector</item>
     </style>
 
 </resources>

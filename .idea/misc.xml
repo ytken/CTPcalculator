@@ -9,7 +9,10 @@
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_arrow_down.xml" value="0.3505" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_avatars.xml" value="0.3505" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ic_buttons.xml" value="0.162" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/list_insurers_divider.xml" value="0.1375" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/list_parameter_divider.xml" value="0.3255" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/main_button_selector.xml" value="0.168" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/main_button_text_selector.xml" value="0.1615" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/ripple_rounded_template_gray.xml" value="0.3505" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/rounded_template_gray.xml" value="0.168" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/drawable/rounded_template_white.xml" value="0.171" />
@@ -18,7 +21,7 @@
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/activity_enter_coeff.xml" value="0.18" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/activity_insurer.xml" value="0.22039473684210525" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/activity_insurers.xml" value="0.33" />
-        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/bottom_sheet_edit.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/bottom_sheet_edit_text.xml" value="0.16145833333333334" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/coordinator_enter_coeff.xml" value="0.16145833333333334" />
@@ -31,6 +34,7 @@
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/param_info_list_text_view.xml" value="0.3333333333333333" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/param_list_edit_view.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/rounded_template.xml" value="0.16197916666666667" />
+        <entry key="..\:/AndroidStudioProjects/Androidlessons/CTPcalculator/app/src/main/res/layout/test.xml" value="0.33" />
       </map>
     </option>
   </component>

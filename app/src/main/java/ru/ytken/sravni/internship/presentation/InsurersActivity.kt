@@ -53,6 +53,21 @@ class InsurersActivity : AppCompatActivity() {
             MainScreenUtils.setExpandableListViewHeightBasedOnChildren(expandableListView)
         }
 
+        val layoutInsurers = findViewById<LinearLayout>(R.id.listViewInsurers)
+
+        vm.listInsurers.observe(this) {
+            layoutInsurers.removeAllViews()
+            inflateInsusersLayout(this, layoutInsurers, it.toTypedArray())
+        }
+
+        listCoeffs?.let { listCoefficientsParamToListCoefficient(it) }?.let {
+            if (NetworkHelper.isNetworkConnected(this@InsurersActivity))
+                vm.save(it)
+            else
+                Toast.makeText(this, getString(R.string.noInternetConnection), Toast.LENGTH_LONG).show()
+        }
+
+        /*
         val listViewInsurers = findViewById<ListView>(R.id.listViewInsurers)
         val listViewAdapter = InsurersListAdapter(this, vm.listInsurers.value)
         listViewInsurers.adapter = listViewAdapter
@@ -63,41 +78,44 @@ class InsurersActivity : AppCompatActivity() {
             buttonCount.isEnabled = true
         })
 
-        listCoeffs?.let { listCoefficientsParamToListCoefficient(it) }?.let { vm.save(it) }
+        */
     }
+    
+    private fun inflateInsusersLayout(
+        context: Context,
+        layoutInsurers: LinearLayout,
+        insurersArray: Array<InsurerParam>?
+    ) {
+        var rowView: View
 
-    class InsurersListAdapter(context: Context, listInsurers: List<InsurerParam>?) : ArrayAdapter<String>(context, R.layout.insurers_list_child_view) {
-
-        private val listInsurers = listInsurers
-        private val mContext = context
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val rowView: View
-
-            if (listInsurers == null) {
-                rowView = LayoutInflater.from(mContext).inflate(R.layout.insurers_blank_list_child_view, parent, false)
+        if (insurersArray == null)
+            for (i in 0..3) {
+                rowView = LayoutInflater.from(context)
+                    .inflate(R.layout.insurers_blank_list_child_view, layoutInsurers, false)
+                layoutInsurers.addView(rowView)
             }
-            else {
-                rowView = LayoutInflater.from(mContext).inflate(R.layout.insurers_list_child_view, parent, false)
+        else
+            insurersArray.forEachIndexed { index, insurerParam ->
+                rowView = LayoutInflater.from(context)
+                    .inflate(R.layout.insurers_list_child_view, layoutInsurers, false)
 
                 val textViewHeading = rowView.findViewById<TextView>(R.id.textViewNameBank)
-                textViewHeading.text = listInsurers[position].name
+                textViewHeading.text = insurerParam.name
 
                 val textViewRating = rowView.findViewById<TextView>(R.id.textViewBankRating)
-                textViewRating.text = listInsurers[position].rating.toString()
+                textViewRating.text = insurerParam.rating.toString()
 
                 val imageViewStar = rowView.findViewById<ImageView>(R.id.imageViewStar)
                 imageViewStar.setImageResource(R.drawable.ic_star)
 
                 val textViewCost = rowView.findViewById<TextView>(R.id.textViewInsuranceCost)
-                textViewCost.text = "${listInsurers[position].price.toInt()} ₽"
+                textViewCost.text = "${insurerParam.price.toInt()} ₽"
 
-                val iconSVGurl = listInsurers[position].bankLogoUrlSVG
+                val iconSVGurl = insurerParam.bankLogoUrlSVG
                 val imageViewIcon = rowView.findViewById<ImageView>(R.id.imageViewIconBank)
                 if (iconSVGurl != null) {
                     imageViewIcon.loadSvg(iconSVGurl)
-                }
-                else {
+                } else {
                     val width = 36
                     val height = 36
 
@@ -109,56 +127,49 @@ class InsurersActivity : AppCompatActivity() {
                     tempCanvas.drawPaint(paint)
 
                     paint.isAntiAlias = true
-                    paint.color = Color.parseColor("#"+listInsurers[position].backgroundColor)
+                    paint.color = Color.parseColor("#" + insurerParam.backgroundColor)
                     paint.style = Paint.Style.FILL
                     tempCanvas.drawCircle(
-                        width/2f,
-                        height/2f,
-                        width/2f,
+                        width / 2f,
+                        height / 2f,
+                        width / 2f,
                         paint
                     )
 
-                    paint.color = Color.parseColor("#"+listInsurers[position].fontColor)
+                    paint.color = Color.parseColor("#" + insurerParam.fontColor)
                     paint.textSize = 25.0f
                     val textRect = Rect()
-                    val text = listInsurers[position].iconTitle
+                    val text = insurerParam.iconTitle
                     paint.getTextBounds(text, 0, text.length, textRect)
                     tempCanvas.drawText(
                         text,
-                        width/2f - (paint.measureText(text)/2f),
-                        height/2f + (textRect.height()/2f),
+                        width / 2f - (paint.measureText(text) / 2f),
+                        height / 2f + (textRect.height() / 2f),
                         paint
                     )
 
                     imageViewIcon.setImageBitmap(tempBitmap)
                 }
+
+                layoutInsurers.addView(rowView)
             }
-            return rowView
-        }
-
-        override fun getCount(): Int {
-            if (listInsurers == null)
-                return 4
-            return listInsurers.size
-        }
-
-        fun ImageView.loadSvg(url: String) {
-            val imageLoader = ImageLoader.Builder(this.context)
-                .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
-                .build()
-
-            val request = ImageRequest.Builder(this.context)
-                .crossfade(false)
-                .data(url)
-                .target(this)
-                .build()
-
-            imageLoader.enqueue(request)
-        }
-
     }
 
-    fun listCoefficientsParamToListCoefficient(
+    private fun ImageView.loadSvg(url: String) {
+        val imageLoader = ImageLoader.Builder(this.context)
+            .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
+            .build()
+
+        val request = ImageRequest.Builder(this.context)
+            .crossfade(false)
+            .data(url)
+            .target(this)
+            .build()
+
+        imageLoader.enqueue(request)
+    }
+
+    private fun listCoefficientsParamToListCoefficient(
         listCoefficientsParam: ListCoefficientsParam
     ): List<CoefficientParam> {
         val resultList = List<CoefficientParam>(listCoefficientsParam.getSize()) { index ->
@@ -167,7 +178,5 @@ class InsurersActivity : AppCompatActivity() {
         }
         return resultList
     }
-
-
 
 }

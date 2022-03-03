@@ -7,7 +7,7 @@
     android:paddingRight="@dimen/padding_sides"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
-    app:cardElevation="1dp"
+    app:cardElevation="3dp"
     app:cardCornerRadius="12dp">
 
     <RelativeLayout

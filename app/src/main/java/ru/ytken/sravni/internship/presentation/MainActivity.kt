@@ -3,22 +3,26 @@ package ru.ytken.sravni.internship.presentation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.ytken.sravni.internship.R
+import ru.ytken.sravni.internship.domain.mainactivity.models.ListParametersParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParam
 
 class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
 
     private val vm by viewModel<MainViewModel>()
+
+    private var sentListParametersParam : ListParametersParam? = null
+
     private val TAG_INIT_FRAGMENT = "TAG_INIT_FRAGMENT"
     private val LOGTAG = "LOGTAGMainActivity"
 
@@ -28,7 +32,8 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
         setContentView(R.layout.activity_main)
 
         val buttonCount = findViewById<Button>(R.id.buttonCount)
-        buttonCount.isEnabled = false
+        buttonCount.isEnabled = true
+        buttonCount.setBackgroundResource(R.drawable.main_button_selector)
 
         val progressBarLoadCoefficients = findViewById<ProgressBar>(R.id.progressBarLoadCoefficients)
         progressBarLoadCoefficients.visibility = View.INVISIBLE
@@ -53,63 +58,60 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
         expandableListView.setOnGroupExpandListener {
             MainScreenUtils.setExpandableListViewHeightBasedOnChildren(expandableListView)
         }
-        vm.listCoefficient.observe(this, Observer {
-            expandableListView.collapseGroup(0)
-            expandableListView.setAdapter(ExpandableListAdapter(applicationContext, vm.listCoefficient.value!!))
-            Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
-        })
-
-        val listViewParameters = findViewById<ListView>(R.id.listViewParameters)
-        val listViewAdapter = ParameterListAdapter(this, vm)
-        listViewParameters.adapter = listViewAdapter
-        vm.listParameters.observe(this, Observer {
-            listViewAdapter.notifyDataSetChanged()
-        })
-        listViewParameters.setOnItemClickListener { _, _, i, _ ->
-            vm.setCurrentFragmentNumber(i)
-        }
-        MainScreenUtils.setListViewHeightBasedOnChildren(listViewParameters)
-
-        vm.responseFromApi.observe(this, Observer {
+        vm.listCoefficient.observe(this) {
             progressBarLoadCoefficients.visibility = View.INVISIBLE
             buttonCount.setText(R.string.buttonCalculateCTP)
-            if(vm.listParameters.value!!.toArray().none { parameterParam -> parameterParam.value.isEmpty() })
+
+            expandableListView.collapseGroup(0)
+            expandableListView.setAdapter(
+                ExpandableListAdapter(
+                    applicationContext,
+                    it
+                )
+            )
+            Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
+
+            if (sentListParametersParam?.toArray()
+                    ?.none { parameterParam -> parameterParam.value.isEmpty() } == true
+            )
                 buttonCount.isEnabled = true
-        })
-    }
-
-    class ParameterListAdapter(context: Context, vm: MainViewModel) : ArrayAdapter<String>(context, R.layout.param_empty_list_text_view) {
-
-        private val listParameters = vm.listParameters.value
-        private val mContext = context
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val rowView: View
-
-            if (listParameters != null) {
-                val parameterShow = listParameters.getElementById(position)
-
-                if(parameterShow.value.isEmpty()) {
-                    rowView = LayoutInflater.from(mContext).inflate(R.layout.param_empty_list_text_view, parent, false)
-                    val textViewRowView = rowView.findViewById<TextView>(R.id.textViewListView)
-                    textViewRowView.text = parameterShow.hint
-                }
-                else {
-                    rowView = LayoutInflater.from(mContext).inflate(R.layout.param_info_list_text_view, parent, false)
-
-                    val textViewListViewDescription = rowView.findViewById<TextView>(R.id.textViewListViewDescription)
-                    textViewListViewDescription.text = parameterShow.hint
-
-                    val textViewZnach = rowView.findViewById<TextView>(R.id.textViewZnach)
-                    textViewZnach.text = "${parameterShow.value} ${parameterShow.dimension}"
-                }
-                return rowView
-            }
-            return LayoutInflater.from(mContext).inflate(R.layout.param_empty_list_text_view, parent, false)
         }
 
-        override fun getCount(): Int {
-            return listParameters?.getSize() ?: 0
+        val layoutParameters = findViewById<LinearLayout>(R.id.listViewParameters)
+
+        vm.listParameters.observe(this) {
+            layoutParameters.removeAllViews()
+            inflateParameterLayout(this, layoutParameters, it.toArray())
+
+            sentListParametersParam = it
+        }
+    }
+
+    private fun inflateParameterLayout(context: Context, layoutParameters: LinearLayout, parameterArray: Array<ParameterParam>) {
+        val inflater = LayoutInflater.from(context)
+        parameterArray.forEachIndexed { index, parameterShow ->
+            var rowView: View
+
+            if(parameterShow.value.isEmpty()) {
+                rowView = inflater.inflate(R.layout.param_empty_list_text_view, layoutParameters, false)
+                val textViewRowView = rowView.findViewById<TextView>(R.id.textViewListView)
+                textViewRowView.text = parameterShow.hint
+            }
+            else {
+                rowView = inflater.inflate(R.layout.param_info_list_text_view, layoutParameters, false)
+
+                val textViewListViewDescription = rowView.findViewById<TextView>(R.id.textViewListViewDescription)
+                textViewListViewDescription.text = parameterShow.hint
+
+                val textViewZnach = rowView.findViewById<TextView>(R.id.textViewZnach)
+                textViewZnach.text = "${parameterShow.value} ${parameterShow.dimension}"
+            }
+
+            rowView.setOnClickListener {
+                vm.setCurrentFragmentNumber(index)
+            }
+
+            layoutParameters.addView(rowView)
         }
     }
 
@@ -136,13 +138,17 @@ class MainActivity : AppCompatActivity(), ParameterBottomSheet.ChangeDialog {
     }
 
     override fun onFragmentDismissed() {
-        MainScreenUtils.callApi(vm, LOGTAG)
+        if (NetworkHelper.isNetworkConnected(this@MainActivity)) {
+            Log.d(LOGTAG, "Call Api")
+            vm.save()
+            val buttonCount = findViewById<Button>(R.id.buttonCount)
+            buttonCount.isEnabled = false
+            buttonCount.text = ""
 
-        val buttonCount = findViewById<Button>(R.id.buttonCount)
-        buttonCount.isEnabled = false
-        buttonCount.text = ""
-
-        val progressBarLoadCoefficients = findViewById<ProgressBar>(R.id.progressBarLoadCoefficients)
-        progressBarLoadCoefficients.visibility = View.VISIBLE
+            val progressBarLoadCoefficients = findViewById<ProgressBar>(R.id.progressBarLoadCoefficients)
+            progressBarLoadCoefficients.visibility = View.VISIBLE
+        } else
+            Toast.makeText(this, getString(R.string.noInternetConnection), Toast.LENGTH_LONG).show()
     }
+
 }

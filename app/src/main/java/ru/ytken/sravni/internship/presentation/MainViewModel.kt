@@ -45,7 +45,7 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
         }
     }
 
-    fun load() = viewModelScope.launch {
+    private fun load() = viewModelScope.launch {
         val response = getListOfCoefficientsUseCase.execute()
         liveListCoefficient.value = response.body() ?.let { listCoefficientsGetToListCoefficientsParam(it) }
     }

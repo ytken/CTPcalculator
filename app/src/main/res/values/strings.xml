@@ -8,6 +8,7 @@
     <string name="headingInsurers">Расчёт цены полиса</string>
     <string name="buttonCalculateExactPrice">Рассчитать точную цену и купить</string>
     <string name="stringEmptyJson">Не определено</string>
+    <string name="noInternetConnection">Необходимо Интернет соединение</string>
 
     <string name="TAG_number_view" translatable="false">TAG_number_view</string>
     <string name="TAG_LIVE_DATA" translatable="false">TAG_LIVE_DATA</string>

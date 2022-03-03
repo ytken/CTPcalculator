@@ -1,6 +1,5 @@
 package ru.ytken.sravni.internship.presentation
 
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ExpandableListView
 import android.widget.ListView
@@ -18,20 +17,14 @@ object MainScreenUtils {
     fun setExpandableListViewHeightBasedOnChildren(listView: ExpandableListView) {
         if (listView.isGroupExpanded(0)) {
             if (onExpandHeight == 0)
-                onExpandHeight = countListViewHeight(listView)
+                onExpandHeight = listView.height
             setListViewHeight(listView, onExpandHeight)
         }
         else {
             if (onCollapseHeight == 0)
-                onCollapseHeight = countListViewHeight(listView)
+                onCollapseHeight = listView.height
             setListViewHeight(listView, onCollapseHeight)
         }
-    }
-
-    fun setListViewHeightBasedOnChildren(listView: ListView) {
-        if (listParametersHeight == 0)
-            listParametersHeight = countListViewHeight(listView)
-        setListViewHeight(listView, listParametersHeight)
     }
 
     private fun countListViewHeight(listView: ListView) : Int {
@@ -50,11 +43,6 @@ object MainScreenUtils {
         params.height = height
         listView.layoutParams = params
         listView.requestLayout()
-    }
-
-    fun callApi(vm: MainViewModel, LOGTAG: String) {
-        Log.d(LOGTAG, "Call Api")
-        vm.save()
     }
 
 }

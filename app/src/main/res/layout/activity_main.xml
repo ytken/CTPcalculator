@@ -26,9 +26,9 @@
 
         <Button
             android:id="@+id/buttonCount"
+            style="@style/ButtonColor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/main_button_selector"
             android:enabled="false"
             android:text="@string/buttonCalculateCTP"
             android:textAllCaps="false" />
@@ -37,7 +37,10 @@
             android:id="@+id/progressBarLoadCoefficients"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/blue_accent"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/heightHeading"
             android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/verticalMargins"
+            android:layout_marginBottom="@dimen/topMargin"
             android:text="@string/CTPcalculator"
             android:textColor="@color/black"
             android:textSize="@dimen/bigTextSize"
@@ -95,20 +98,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-                <ListView
+                <LinearLayout
                     android:id="@+id/listViewParameters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/verticalMargins"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginTop="@dimen/topMargin"
+                    android:layout_marginBottom="@dimen/bottomListMargin"
+                    android:showDividers="middle"
                     android:background="@drawable/rounded_template_white"
-                    android:divider="@color/cardview_light_background"
-                    android:dividerHeight="12dp"
+                    android:divider="@drawable/list_parameter_divider"
                     android:listSelector="@android:color/transparent"
                     android:paddingLeft="@dimen/padding_sides"
                     android:paddingTop="@dimen/padding_sides2"
                     android:paddingRight="@dimen/padding_sides"
-                    android:paddingBottom="@dimen/padding_sides2" />
+                    android:paddingBottom="@dimen/padding_sides2"
+                    android:orientation="vertical" />
 
             </LinearLayout>
 
