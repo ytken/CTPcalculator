@@ -1,47 +1,18 @@
 package ru.ytken.sravni.internship.domain.mainactivity.models
 
-class ListParametersParam(
-    var userCity: ParameterParam = ParameterParam("userCity", "",
+class ListParametersParam (
+    var list: ArrayList<ParameterParamMain> = arrayListOf(
+        ParameterParamMain("userCity", "",
         "Город регистрации собственника", "text", ""),
-    var userCapacity: ParameterParam = ParameterParam("userCapacity", "",
+        ParameterParamMain("userCapacity", "",
         "Мощность автомобиля", "number", "л.с."),
-    var userNumber: ParameterParam = ParameterParam("userNumber", "",
+        ParameterParamMain("userNumber", "",
         "Сколько водителей", "number", "водителя"),
-    var userYoungest: ParameterParam = ParameterParam("userYoungest", "",
+        ParameterParamMain("userYoungest", "",
         "Возраст младшего из водителей", "text", "лет"),
-    var userMinExp: ParameterParam = ParameterParam("userMinExp", "",
+        ParameterParamMain("userMinExp", "",
         "Минимальный стаж водителей", "text", "года"),
-    var userNoCrush: ParameterParam = ParameterParam("userNoCrush", "",
+        ParameterParamMain("userNoCrush", "",
         "Сколько лет не было аварий", "number", "года")
+    )
 )
-{
-    fun getSize(): Int {
-        return 6
-    }
-
-    fun toArray() : Array<ParameterParam> {
-        return arrayOf(userCity, userCapacity,
-            userNumber, userYoungest,
-            userMinExp, userNoCrush
-        )
-    }
-
-    fun getElementById(id: Int) : ParameterParam {
-        val parameterShow = when (id) {
-            0 -> userCity
-            1 -> userCapacity
-            2 -> userNumber
-            3 -> userYoungest
-            4 -> userMinExp
-            5 -> userNoCrush
-            else -> ParameterParam("title", "value", "hint", "type", "dimension")
-        }
-        return parameterShow
-    }
-
-    fun setValueForElement(id: Int, value: String) {
-        val parameterChange = getElementById(id)
-        parameterChange.value = value
-    }
-
-}

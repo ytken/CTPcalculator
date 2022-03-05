@@ -10,6 +10,7 @@
     <dimen name="heightHeading">34dp</dimen>
     <dimen name="padding_sides">16dp</dimen>
     <dimen name="padding_sides2">17dp</dimen>
+    <dimen name="padding_top_bottom_sheet">36dp</dimen>
     <dimen name="padding_top_main">17dp</dimen>
     <dimen name="padding_top_insurers_1">27dp</dimen>
     <dimen name="padding_top_insurers_2">18dp</dimen>

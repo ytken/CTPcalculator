@@ -10,4 +10,5 @@
     <string name="buttonCalculateExactPrice">Calculate the exact price and buy</string>
     <string name="stringEmptyJson">Not defined</string>
     <string name="noInternetConnection">Internet connection is required</string>
+    <string name="userNumberNoLimit">No limitations</string>
 </resources>

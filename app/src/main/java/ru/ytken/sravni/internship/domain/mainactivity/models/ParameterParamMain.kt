@@ -1,9 +1,11 @@
 package ru.ytken.sravni.internship.domain.mainactivity.models
 
-data class ParameterParam (
+import java.io.Serializable
+
+data class ParameterParamMain (
     val title: String,
     var value: String,
     val hint: String,
     val type: String,
     val dimension: String
-    )
+    ) : Serializable

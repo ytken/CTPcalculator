@@ -4,13 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import ru.ytken.sravni.internship.data.storage.models.mainactivity.Coefficient
+import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListCoefficientsGet
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListParametersPost
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.Parameter
-import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListParametersParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.usecase.GetListOfCoefficientsUseCase
 import ru.ytken.sravni.internship.domain.mainactivity.usecase.SaveParametersUseCase
 
@@ -30,8 +31,14 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
     private var liveResponseFromApi = MutableLiveData<Boolean>()
     val responseFromApi = liveResponseFromApi
 
-    fun saveParameter(listParametersParam: ListParametersParam) {
-        liveListParameters.value = listParametersParam
+    fun saveParameter(numberView: Int, value: String) {
+        val list = liveListParameters.value?.list
+        if (list != null) {
+            val param = list[numberView]
+            param.value = value
+            list[numberView] = param
+            liveListParameters.value = ListParametersParam(list)
+        }
     }
 
     fun save() = viewModelScope.launch {
@@ -56,43 +63,25 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
 
     private fun listCoefficientsGetToListCoefficientsParam(listCoefficientsGet: ListCoefficientsGet): ListCoefficientsParam {
         val resultRep = listCoefficientsGet.factors
+        val listToAdd = ArrayList<CoefficientParamMain>()
 
-        val BTcoeff = findMatchElement(resultRep, "БТ")[0]
-        val KMcoeff = findMatchElement(resultRep, "КМ")[0]
-        val KTcoeff = findMatchElement(resultRep, "КТ")[0]
-        val KBMcoeff = findMatchElement(resultRep, "КБМ")[0]
-        val KVScoeff = findMatchElement(resultRep, "КВС")[0]
-        val KOcoeff = findMatchElement(resultRep, "КО")[0]
-
-        var result =
-            ListCoefficientsParam(
-                BT = CoefficientParam(BTcoeff.title, BTcoeff.headerValue,
-                    BTcoeff.name, BTcoeff.detailText, BTcoeff.value),
-                KM = CoefficientParam(KMcoeff.title, KMcoeff.headerValue,
-                    KMcoeff.name, KMcoeff.detailText, KMcoeff.value),
-                KT = CoefficientParam(KTcoeff.title, KTcoeff.headerValue,
-                    KTcoeff.name, KTcoeff.detailText, KTcoeff.value),
-                KBM = CoefficientParam(KBMcoeff.title, KBMcoeff.headerValue,
-                    KBMcoeff.name, KBMcoeff.detailText, KBMcoeff.value),
-                KVS = CoefficientParam(KVScoeff.title, KVScoeff.headerValue,
-                    KVScoeff.name, KVScoeff.detailText, KVScoeff.value),
-                KO = CoefficientParam(KOcoeff.title, KOcoeff.headerValue,
-                    KOcoeff.name, KOcoeff.detailText, KOcoeff.value)
+        resultRep.forEach {
+            listToAdd.add(
+                CoefficientParamMain(
+                    it.title,
+                    it.headerValue,
+                    it.name,
+                    it.detailText,
+                    it.value
+                )
             )
-        List(resultRep.size)
-        {i -> {
-            val coefficient = resultRep.get(i)
-            CoefficientParam(coefficient.title, coefficient.headerValue, coefficient.value, coefficient.name, coefficient.detailText) }
         }
-        return result
-    }
 
-    private fun findMatchElement(listCoefficients: Array<Coefficient>, title: String): List<Coefficient> {
-        return listCoefficients.filter { it.title.equals(title) }
+        return ListCoefficientsParam(listToAdd)
     }
 
     private fun listParametersParamToListParametersPost(listParameterParam: ListParametersParam) : ListParametersPost {
-        val initArray = listParameterParam.toArray()
+        val initArray = listParameterParam.list
         val arrayParameter: Array<Parameter> = Array(initArray.size) {
                 i -> Parameter(initArray[i].title, initArray[i].value)
         }

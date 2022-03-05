@@ -3,15 +3,23 @@
     <string name="CTPcalculator">Калькулятор ОСАГО</string>
     <string name="buttonCalculateCTP">Рассчитать ОСАГО</string>
     <string name="yourCoefficients">Ваши коэффициенты</string>
-    <string name="buttonNext">Далее  ⇀</string>
+    <string name="buttonNext">Далее</string>
     <string name="buttonNextFinish">Подтвердить</string>
     <string name="headingInsurers">Расчёт цены полиса</string>
     <string name="buttonCalculateExactPrice">Рассчитать точную цену и купить</string>
     <string name="stringEmptyJson">Не определено</string>
     <string name="noInternetConnection">Необходимо Интернет соединение</string>
+    <string name="userNumberNoLimit">Без ограничений</string>
 
     <string name="TAG_number_view" translatable="false">TAG_number_view</string>
     <string name="TAG_LIVE_DATA" translatable="false">TAG_LIVE_DATA</string>
     <string name="TAG_API" translatable="false">TAG_API</string>
     <string name="TAG_send_coeffs" translatable="false">TAG_send_coeffs</string>
+    <string name="TAG_parameter_show" translatable="false">TAG_parameter_show</string>
+    <string name="TAG_last_view" translatable="false">TAG_last_view</string>
+    <string name="TAG_index_pass" translatable="false">TAG_index_pass</string>
+
+    <string name="userYoungestName" translatable="false">userYoungest</string>
+    <string name="userNumberName" translatable="false">userNumber</string>
+    <string name="userNumberDefault" translatable="false">!</string>
 </resources>

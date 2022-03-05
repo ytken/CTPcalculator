@@ -64,8 +64,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/heightHeading"
-            android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/topMargin"
+            android:gravity="center_vertical"
             android:text="@string/CTPcalculator"
             android:textColor="@color/black"
             android:textSize="@dimen/bigTextSize"
@@ -87,16 +87,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ExpandableListView
-                    android:id="@+id/listViewCoefficients"
+                <ru.ytken.sravni.internship.presentation.CoefficientListView
+                    android:id="@+id/coefficientListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rounded_template_white"
                     android:groupIndicator="@null"
                     android:listSelector="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                    android:scrollbars="none" />
 
                 <LinearLayout
                     android:id="@+id/listViewParameters"
@@ -104,15 +102,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/topMargin"
                     android:layout_marginBottom="@dimen/bottomListMargin"
-                    android:showDividers="middle"
                     android:background="@drawable/rounded_template_white"
                     android:divider="@drawable/list_parameter_divider"
                     android:listSelector="@android:color/transparent"
+                    android:orientation="vertical"
                     android:paddingLeft="@dimen/padding_sides"
                     android:paddingTop="@dimen/padding_sides2"
                     android:paddingRight="@dimen/padding_sides"
                     android:paddingBottom="@dimen/padding_sides2"
-                    android:orientation="vertical" />
+                    android:showDividers="middle" />
 
             </LinearLayout>
 

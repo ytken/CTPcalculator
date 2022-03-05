@@ -1,51 +1,89 @@
 package ru.ytken.sravni.internship.presentation
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.InputType
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
+import android.view.WindowManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.ytken.sravni.internship.R
-import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParam
-import java.lang.RuntimeException
+import ru.ytken.sravni.internship.databinding.BottomSheetEditBinding
 
 
 class ParameterBottomSheet : BottomSheetDialogFragment() {
 
-    private lateinit var behavior: BottomSheetBehavior<View>
-    private lateinit var editTextCoeff: EditText
+    private var binding: BottomSheetEditBinding? = null
+
+    private var passFragmentIndex: Int? = null
 
     private val vm by activityViewModels<MainViewModel>()
 
-    var mChangeDialog: ChangeDialog? = null
+    private var mChangeActivity: ChangeActivity? = null
 
-    interface ChangeDialog {
-        fun setNextDialog(numberView: Int)
-        fun setPreviousDialog(numberView: Int)
-        fun onFragmentDismissed()
+    interface ChangeActivity {
+        fun callApi()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is ChangeActivity)
+            mChangeActivity = context
+        else
+            throw RuntimeException("$context must implement ChangeActivity")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            passFragmentIndex = it.getInt(getString(R.string.TAG_index_pass))
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding = BottomSheetEditBinding.inflate(LayoutInflater.from(context))
+        val view = binding!!.root
+
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-
-        val view = View.inflate(requireContext(), R.layout.bottom_sheet_edit, null)
-
         dialog.setContentView(view)
-
-        behavior = BottomSheetBehavior.from(view.parent as View)
-        behavior.skipCollapsed = true
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.setOnShowListener {
+            setupFullHeight(it as BottomSheetDialog)
+        }
 
         return dialog
+    }
+
+    private fun setupFullHeight(bottomSheetDialog: BottomSheetDialog) {
+        val bottomSheet =
+            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
+        val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet!!)
+        val layoutParams = bottomSheet.layoutParams
+
+        val displayMetrics = DisplayMetrics()
+        val activity = context as Activity?
+        activity!!.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        if (layoutParams != null) {
+            if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                layoutParams.width = (displayMetrics.widthPixels * 0.5).toInt()
+            else
+                layoutParams.height = (displayMetrics.heightPixels * 0.5).toInt()
+        }
+        bottomSheet.layoutParams = layoutParams
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     override fun onCreateView(
@@ -56,100 +94,50 @@ class ParameterBottomSheet : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.bottom_sheet_edit, container, false)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is ChangeDialog)
-            mChangeDialog = context as ChangeDialog
-        else
-            throw RuntimeException("$context must implement ChangeDialog")
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val numberView: Int =
-            if (vm.currentFragmentNumber.value != null)
-                vm.currentFragmentNumber.value!!
-            else 0
+        addParameterFragment(arguments)
+    }
 
-        val parameterShow = vm.listParameters.value?.getElementById(numberView) ?:
-                            ParameterParam("title", "value", "hint", "type", "dimension")
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
 
-        val textViewHeading = view.findViewById<TextView>(R.id.textViewBottomHeading)
-        textViewHeading.text = parameterShow.hint
+        val bottomSheet = dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet) as ViewGroup
+        val behavior = BottomSheetBehavior.from(bottomSheet)
+        behavior.skipCollapsed = true
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
-        editTextCoeff = view.findViewById<EditText>(R.id.editTextCoefficient)
-        if (parameterShow.type.equals("number"))
-            editTextCoeff.inputType = InputType.TYPE_CLASS_NUMBER
-        else
-            editTextCoeff.inputType = InputType.TYPE_CLASS_TEXT
+    fun addParameterFragment(args: Bundle?) {
+        val fragment = ParameterFragment()
+        fragment.arguments = args
 
-        editTextCoeff.setOnEditorActionListener { _, i, _ ->
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                saveParameter(editTextCoeff.text.toString())
-            }
-            false
-        }
-        editTextCoeff.imeOptions = EditorInfo.IME_ACTION_DONE
-        val keepedValue = parameterShow.value
-        if (keepedValue != null && keepedValue.isNotEmpty())
-            editTextCoeff.setText(keepedValue)
-        editTextCoeff.requestFocus()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerBottomSheet, fragment)
+            .commit()
+    }
 
-        val buttonClearEditText = view.findViewById<ImageView>(R.id.imageViewClearEditText)
-        buttonClearEditText.setOnClickListener { editTextCoeff.setText("") }
-
-        val nextButton = view.findViewById<Button>(R.id.buttonNextCoeff)
-
-        if (numberView == (vm.listParameters.value?.getSize() ?: 0) - 1) {
-            nextButton.text = getString(R.string.buttonNextFinish)
-            nextButton.setOnClickListener {
-                saveParameter(editTextCoeff.text.toString())
-                mChangeDialog?.onFragmentDismissed()
-                dismiss()
-            }
-        }
-        else {
-            nextButton.setOnClickListener {
-                saveParameter(editTextCoeff.text.toString())
-                mChangeDialog?.setNextDialog(numberView)
-                dismiss()
-            }
-        }
-
-        val backButton = view.findViewById<ImageButton>(R.id.imageButtonBottomBack)
-
-        if (numberView > 0) {
-            backButton.visibility = View.VISIBLE
-            backButton.setOnClickListener {
-                saveParameter(editTextCoeff.text.toString())
-                mChangeDialog?.setPreviousDialog(numberView)
-                dismiss()
-            }
-        }
-        else
-            backButton.visibility = View.INVISIBLE
+    private fun getSystemHeight(): Int {
+        val displayMetrics = DisplayMetrics()
+        val activityContext = context as AppCompatActivity
+        activityContext.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        saveParameter(editTextCoeff.text.toString())
-        mChangeDialog?.onFragmentDismissed()
+        mChangeActivity?.callApi()
         super.onCancel(dialog)
     }
 
-    private fun saveParameter(value: String) {
-        val numberView: Int = if (vm.currentFragmentNumber.value != null)
-            vm.currentFragmentNumber.value!!
-        else 0
-        val listParameters = vm.listParameters.value
-        if (listParameters != null) {
-            listParameters.setValueForElement(numberView, value)
-            vm.saveParameter(listParameters)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onDetach() {
         super.onDetach()
-        mChangeDialog = null
+        mChangeActivity = null
     }
 
 }

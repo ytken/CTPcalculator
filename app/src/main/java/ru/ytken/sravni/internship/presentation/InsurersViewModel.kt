@@ -9,14 +9,13 @@ import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListCoeff
 import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListInsurersGet
 import ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientParam
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
-import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.GetListOfInsurersUseCase
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.SaveListOfCoefficientsUseCase
 
 class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficientsUseCase,
     val getListOfInsurersUseCase: GetListOfInsurersUseCase): ViewModel() {
 
-    private var liveListInsurers = MutableLiveData<List<InsurerParam>>()
+    private var liveListInsurers = MutableLiveData<List<InsurerParam>>(null)
     val listInsurers = liveListInsurers
 
     private var liveResponseFromApi = MutableLiveData<Boolean>()
@@ -25,7 +24,7 @@ class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficient
     private lateinit var listCoefficientsPost: ListCoefficientsPost
 
     fun save(listCoefficientParam:
-             List<ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientParam>) =
+             List<CoefficientParam>) =
         viewModelScope.launch {
             listCoefficientsPost = listOfCoefficientsParamToListCoefficientsPost(listCoefficientParam)
             val result = saveListOfCoefficientsUseCase.execute(listCoefficientsPost)
@@ -40,7 +39,7 @@ class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficient
     }
 
     private fun listOfCoefficientsParamToListCoefficientsPost( listCoefficientParam:
-        List<ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientParam>)
+        List<CoefficientParam>)
     : ListCoefficientsPost {
         val initArray = listCoefficientParam.toTypedArray()
         val arrayCoefficient: Array<Coefficient> = Array(initArray.size) {
