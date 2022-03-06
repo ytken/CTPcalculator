@@ -17,7 +17,7 @@
         android:paddingBottom="@dimen/bottomTipMargin"/>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewSuccess"
         style="@style/bottomSheetTextHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSuccess"
         android:orientation="vertical"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/padding_sides"

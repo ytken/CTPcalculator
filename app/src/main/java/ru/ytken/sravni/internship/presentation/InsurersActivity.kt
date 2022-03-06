@@ -47,9 +47,7 @@ class InsurersActivity : AppCompatActivity() {
 
         val listCoeffs = intent.getSerializableExtra(getString(R.string.TAG_send_coeffs)) as ArrayList<CoefficientParamMain>
         listCoeffs.let {
-            val expandableListAdapter: ExpandableListAdapter =
-                ExpandableListAdapter(applicationContext, it)
-            binding.listViewCoefficientsInsurers.setAdapter(expandableListAdapter)
+            Utils.inflateCoefficientLayout(this, binding.linearCoefficientsInsurers, it, false)
         }
 
         vm.listInsurers.observe(this) {
@@ -57,8 +55,6 @@ class InsurersActivity : AppCompatActivity() {
             inflateInsusersLayout(this, binding.listViewInsurers, it)
             binding.buttonCountExactPrice.isEnabled = true
         }
-
-
 
         listCoeffs.let { listCoefficientsParamToListCoefficient(it) }?.let {
             if (NetworkHelper.isNetworkConnected(this@InsurersActivity))

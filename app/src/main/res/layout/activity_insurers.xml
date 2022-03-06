@@ -97,19 +97,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ru.ytken.sravni.internship.presentation.CoefficientListView
-                    android:id="@+id/listViewCoefficientsInsurers"
+                <LinearLayout
+                    android:id="@+id/linearCoefficientsInsurers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rounded_template_white"
-                    android:groupIndicator="@null"
                     android:scrollbars="none"
                     android:listSelector="@android:color/transparent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView4"
                     android:layout_marginLeft="@dimen/padding_sides"
-                    android:layout_marginRight="@dimen/padding_sides"/>
+                    android:layout_marginRight="@dimen/padding_sides"
+                    android:orientation="vertical" />
 
                 <LinearLayout
                     android:id="@+id/listViewInsurers"

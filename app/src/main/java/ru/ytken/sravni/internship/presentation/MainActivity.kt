@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.databinding.ActivityMainBinding
 import ru.ytken.sravni.internship.databinding.FragmentInsurerBinding
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
+import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParamMain
 import java.io.Serializable
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity(),
             binding.progressBarLoadCoefficients.visibility = View.INVISIBLE
             binding.buttonCount.setText(R.string.buttonCalculateCTP)
 
-            binding.coefficientListView.setAdapter(ExpandableListAdapter(applicationContext, it.list))
+            Utils.inflateCoefficientLayout(this, binding.expandableLinearLayout, it.list, false)
             Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
 
             if (vm.listParameters.value?.list
@@ -109,6 +111,8 @@ class MainActivity : AppCompatActivity(),
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+
 
     private fun inflateParameterLayout(context: Context, layoutParameters: LinearLayout, parameterArray: ArrayList<ParameterParamMain>) {
         val inflater = LayoutInflater.from(context)
@@ -296,6 +300,10 @@ class MainActivity : AppCompatActivity(),
 
             val rowView = LayoutInflater.from(context)
                 .inflate(R.layout.insurers_list_child_view, cardViewInsurer, false)
+
+            val headingFont = Typeface.createFromAsset(context?.assets, "font/SF-Pro-Display-Bold.otf")
+            val textViewSuccess = view.findViewById<TextView>(R.id.textViewSuccess)
+            textViewSuccess.typeface = headingFont
 
             val textViewHeading = rowView.findViewById<TextView>(R.id.textViewNameBank)
             textViewHeading.text = insurerParam?.name

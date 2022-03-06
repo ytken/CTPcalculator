@@ -88,14 +88,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ru.ytken.sravni.internship.presentation.CoefficientListView
-                    android:id="@+id/coefficientListView"
+                <LinearLayout
+                    android:id="@+id/expandableLinearLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@drawable/rounded_template_white"
-                    android:groupIndicator="@null"
                     android:listSelector="@android:color/transparent"
-                    android:scrollbars="none" />
+                    android:scrollbars="none"
+                    android:orientation="vertical" />
 
                 <LinearLayout
                     android:id="@+id/listViewParameters"
