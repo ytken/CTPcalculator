@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/padding_top_bottom_sheet"
-    android:paddingBottom="@dimen/padding_top_bottom_sheet">
+    android:paddingTop="@dimen/topTipMargin">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_tip"
+        android:paddingBottom="@dimen/bottomTipMargin"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -14,7 +24,7 @@
         android:text="@string/yourInsuranceSuccess"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
         android:layout_marginLeft="@dimen/padding_sides"
         android:layout_marginRight="@dimen/padding_sides"/>
 

@@ -105,41 +105,7 @@ class InsurersActivity : AppCompatActivity() {
                 if (iconSVGurl != null) {
                     imageViewIcon.loadSvg(iconSVGurl)
                 } else {
-                    val width = 36
-                    val height = 36
-
-                    //TODO: change this koshmar
-
-                    val tempBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-                    val tempCanvas = Canvas(tempBitmap)
-
-                    val paint = Paint()
-                    paint.color = Color.WHITE
-                    tempCanvas.drawPaint(paint)
-
-                    paint.isAntiAlias = true
-                    paint.color = Color.parseColor("#" + insurerParam.backgroundColor)
-                    paint.style = Paint.Style.FILL
-                    tempCanvas.drawCircle(
-                        width / 2f,
-                        height / 2f,
-                        width / 2f,
-                        paint
-                    )
-
-                    paint.color = Color.parseColor("#" + insurerParam.fontColor)
-                    paint.textSize = 25.0f
-                    val textRect = Rect()
-                    val text = insurerParam.iconTitle
-                    paint.getTextBounds(text, 0, text.length, textRect)
-                    tempCanvas.drawText(
-                        text,
-                        width / 2f - (paint.measureText(text) / 2f),
-                        height / 2f + (textRect.height() / 2f),
-                        paint
-                    )
-
-                    imageViewIcon.setImageBitmap(tempBitmap)
+                    imageViewIcon.setImageBitmap(generateIcon(insurerParam))
                 }
 
                 layoutInsurers.addView(rowView)
@@ -177,6 +143,43 @@ class InsurersActivity : AppCompatActivity() {
             .build()
 
         imageLoader.enqueue(request)
+    }
+
+    private fun generateIcon(insurerParam: InsurerParam): Bitmap {
+        val width = 36
+        val height = 36
+        val radiusCorners = resources.getDimension(R.dimen.iconRoundedCornersRadius)
+
+        val tempBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val tempCanvas = Canvas(tempBitmap)
+
+        val paint = Paint()
+        paint.color = Color.WHITE
+        tempCanvas.drawPaint(paint)
+
+        paint.isAntiAlias = true
+        paint.color = Color.parseColor("#" + insurerParam.backgroundColor)
+        paint.style = Paint.Style.FILL
+        val rect = RectF(0F,0F, width.toFloat(), height.toFloat())
+        tempCanvas.drawRoundRect(
+            rect,
+            radiusCorners,
+            radiusCorners,
+            paint
+        )
+
+        paint.color = Color.parseColor("#" + insurerParam.fontColor)
+        paint.textSize = 25.0f
+        val textRect = Rect()
+        val text = insurerParam.iconTitle
+        paint.getTextBounds(text, 0, text.length, textRect)
+        tempCanvas.drawText(
+            text,
+            width / 2f - (paint.measureText(text) / 2f),
+            height / 2f + (textRect.height() / 2f),
+            paint
+        )
+        return tempBitmap
     }
 
     private fun listCoefficientsParamToListCoefficient(
