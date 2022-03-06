@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity(),
             binding.coefficientListView.setAdapter(ExpandableListAdapter(applicationContext, it.list))
             Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
 
+            binding.coefficientListView.expandGroup(0)
+
             if (vm.listParameters.value?.list
                     ?.none { parameterParam -> parameterParam.value.isEmpty() } == true
             )

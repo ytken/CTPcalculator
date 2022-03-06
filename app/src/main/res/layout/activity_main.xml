@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/cardview_light_background"
         android:orientation="horizontal"
@@ -30,6 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:enabled="false"
+            android:paddingTop="@dimen/buttonCountPadding"
+            android:paddingBottom="@dimen/buttonCountPadding"
             android:text="@string/buttonCalculateCTP"
             android:textAllCaps="false" />
 
@@ -37,14 +39,13 @@
             android:id="@+id/progressBarLoadCoefficients"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:indeterminate="true"
             android:indeterminateTint="@color/blue_accent"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/buttonCount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/buttonCount" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,13 +85,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <ru.ytken.sravni.internship.presentation.CoefficientListView
                     android:id="@+id/coefficientListView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/rounded_template_white"
                     android:groupIndicator="@null"
                     android:listSelector="@android:color/transparent"

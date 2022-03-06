@@ -11,6 +11,7 @@ class CoefficientListView(context: Context, attrs: AttributeSet): ExpandableList
             Int.MAX_VALUE shr 2,
             MeasureSpec.AT_MOST
         )
+
         super.onMeasure(widthMeasureSpec, expandSpec)
     }
 

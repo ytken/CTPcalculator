@@ -23,4 +23,5 @@
     <dimen name="iconRoundedCornersRadius">4dp</dimen>
     <dimen name="topTipMargin">8dp</dimen>
     <dimen name="bottomTipMargin">24dp</dimen>
+    <dimen name="buttonCountPadding">18dp</dimen>
 </resources>
