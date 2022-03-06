@@ -17,7 +17,7 @@
     <dimen name="padding_top_insurers_2">18dp</dimen>
     <dimen name="heightListView">68dp</dimen>
     <dimen name="topMargin">24dp</dimen>
-    <dimen name="bottomListMargin">70dp</dimen>
+    <dimen name="bottomListMargin">50dp</dimen>
     <dimen name="listParameterDivider">12dp</dimen>
     <dimen name="listParameterInsurers">16dp</dimen>
     <dimen name="iconRoundedCornersRadius">4dp</dimen>

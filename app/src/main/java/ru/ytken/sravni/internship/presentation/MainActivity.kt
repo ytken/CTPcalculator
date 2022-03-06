@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(),
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonCount.isEnabled = true
+        binding.buttonCount.isEnabled = false
         binding.buttonCount.setBackgroundResource(R.drawable.main_button_selector)
 
         binding.progressBarLoadCoefficients.visibility = View.INVISIBLE
@@ -76,8 +76,6 @@ class MainActivity : AppCompatActivity(),
 
             binding.coefficientListView.setAdapter(ExpandableListAdapter(applicationContext, it.list))
             Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
-
-            binding.coefficientListView.expandGroup(0)
 
             if (vm.listParameters.value?.list
                     ?.none { parameterParam -> parameterParam.value.isEmpty() } == true
