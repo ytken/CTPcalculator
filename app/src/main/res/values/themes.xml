@@ -31,7 +31,7 @@
 
     <style name="bottomSheetTextHeading" parent="TextAppearance.AppCompat">  
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/dark_100</item>
+        <item name="android:textColor">@color/Dark_100</item>
         <item name="android:textStyle">bold</item>
     </style>
 

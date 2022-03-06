@@ -1,8 +1,10 @@
 package ru.ytken.sravni.internship.presentation
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,27 +24,38 @@ class ParameterFragment : Fragment() {
 
     private var numberView: Int = 0
     private lateinit var parameterShow: ParameterParamMain
-    private var isLastParameter: Boolean? = null
+    private var isLastParameter: Boolean = false
 
     var mChangeDialog: ChangeDialog? = null
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        if (context is ChangeDialog)
-            mChangeDialog = context
-        else
-            throw RuntimeException("$context must implement ChangeDialog")
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            numberView = it.getInt(getString(R.string.TAG_number_view))
-            parameterShow = it.getSerializable(getString(R.string.TAG_parameter_show))
+
+        if (context is ChangeDialog)
+            mChangeDialog = context as ChangeDialog
+        else
+            throw RuntimeException("$context must implement ChangeDialog")
+
+        if(savedInstanceState != null) {
+            numberView = savedInstanceState.getInt(getString(R.string.TAG_number_view))
+            parameterShow = savedInstanceState.getSerializable(getString(R.string.TAG_parameter_show))
                     as ParameterParamMain
-            isLastParameter = it.getBoolean(getString(R.string.TAG_last_view))
+            isLastParameter = savedInstanceState.getBoolean(getString(R.string.TAG_last_view))
         }
+        else
+            arguments?.let {
+                numberView = it.getInt(getString(R.string.TAG_number_view))
+                parameterShow = it.getSerializable(getString(R.string.TAG_parameter_show))
+                        as ParameterParamMain
+                isLastParameter = it.getBoolean(getString(R.string.TAG_last_view))
+            }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(getString(R.string.TAG_number_view), numberView)
+        outState.putSerializable(getString(R.string.TAG_parameter_show), parameterShow)
+        outState.putBoolean(getString(R.string.TAG_last_view), isLastParameter)
     }
 
     override fun onCreateView(
@@ -56,7 +69,9 @@ class ParameterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentParameterBinding.bind(view)
 
+        val headingFont = Typeface.createFromAsset(context?.assets, "font/SF-Pro-Display-Bold.otf")
         binding!!.textViewBottomHeading.text = parameterShow.hint
+        binding!!.textViewBottomHeading.typeface = headingFont
 
         val editTextCoeff = binding!!.editTextCoefficient
         if (parameterShow.type == "number")

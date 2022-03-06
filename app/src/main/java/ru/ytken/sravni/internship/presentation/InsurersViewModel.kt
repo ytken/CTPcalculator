@@ -1,8 +1,14 @@
 package ru.ytken.sravni.internship.presentation
 
+import android.graphics.Bitmap
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.ImageLoader
+import coil.request.ImageRequest
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.ytken.sravni.internship.data.storage.models.insurersactivity.Coefficient
 import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListCoefficientsPost
@@ -11,6 +17,7 @@ import ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientPara
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.GetListOfInsurersUseCase
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.SaveListOfCoefficientsUseCase
+import java.io.ByteArrayOutputStream
 
 class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficientsUseCase,
     val getListOfInsurersUseCase: GetListOfInsurersUseCase): ViewModel() {

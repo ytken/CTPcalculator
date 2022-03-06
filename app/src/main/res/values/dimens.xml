@@ -4,6 +4,7 @@
     <dimen name="smallTextSize">12sp</dimen>
     <dimen name="normalTextSize1">15sp</dimen>
     <dimen name="normalTextSize2">16sp</dimen>
+    <dimen name="normalTextSize3">17sp</dimen>
     <dimen name="headingInsurersText">20sp</dimen>
     <dimen name="bankName">14sp</dimen>
 

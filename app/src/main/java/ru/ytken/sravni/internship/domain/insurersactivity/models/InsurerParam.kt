@@ -1,6 +1,6 @@
 package ru.ytken.sravni.internship.domain.insurersactivity.models
 
-import ru.ytken.sravni.internship.data.storage.models.insurersactivity.Branding
+import java.io.Serializable
 
 data class InsurerParam(
     var name: String,
@@ -11,4 +11,4 @@ data class InsurerParam(
     var iconTitle: String,
     var bankLogoUrlPDF: String?,
     var bankLogoUrlSVG: String?
-)
+) : Serializable

@@ -1,12 +1,21 @@
 package ru.ytken.sravni.internship.presentation
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.graphics.*
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
@@ -16,6 +25,9 @@ import ru.ytken.sravni.internship.databinding.ActivityInsurersBinding
 import ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientParam
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
 import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParamMain
+import ru.ytken.sravni.internship.presentation.Utils.convertStringToPrice
+import java.io.*
+
 
 class InsurersActivity : AppCompatActivity() {
 
@@ -64,6 +76,7 @@ class InsurersActivity : AppCompatActivity() {
     ) {
         var rowView: View
 
+
         if (insurersArray == null)
             for (i in 0..3) {
                 rowView = LayoutInflater.from(context)
@@ -85,7 +98,7 @@ class InsurersActivity : AppCompatActivity() {
                 imageViewStar.setImageResource(R.drawable.ic_star)
 
                 val textViewCost = rowView.findViewById<TextView>(R.id.textViewInsuranceCost)
-                textViewCost.text = "${insurerParam.price.toInt()} ₽"
+                textViewCost.text = "${convertStringToPrice(insurerParam.price)}₽"
 
                 val iconSVGurl = insurerParam.bankLogoUrlSVG
                 val imageViewIcon = rowView.findViewById<ImageView>(R.id.imageViewIconBank)
@@ -131,8 +144,23 @@ class InsurersActivity : AppCompatActivity() {
 
                 layoutInsurers.addView(rowView)
 
+
                 rowView.setOnClickListener {
-                    // TODO: back to main screen
+                    val rowViewIcon = it.findViewById<ImageView>(R.id.imageViewIconBank)
+                    val stream = openFileOutput(getString(R.string.fileIconBankName), Context.MODE_PRIVATE)
+                    val bmp = rowViewIcon.drawable.toBitmap(36,36)
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
+
+                    stream.close()
+                    bmp.recycle()
+
+                    val result = Intent()
+                    result.putExtra(
+                        getString(R.string.TAG_insurer_result),
+                        insurerParam as Serializable
+                    )
+                    setResult(Activity.RESULT_OK, result)
+                    finish()
                 }
             }
     }

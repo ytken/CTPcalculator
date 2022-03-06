@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +27,7 @@ import ru.ytken.sravni.internship.databinding.BottomSheetEditBinding
 class ParameterBottomSheet : BottomSheetDialogFragment() {
 
     private var binding: BottomSheetEditBinding? = null
-
     private var passFragmentIndex: Int? = null
-
-    private val vm by activityViewModels<MainViewModel>()
-
     private var mChangeActivity: ChangeActivity? = null
 
     interface ChangeActivity {
@@ -112,6 +109,7 @@ class ParameterBottomSheet : BottomSheetDialogFragment() {
     fun addParameterFragment(args: Bundle?) {
         val fragment = ParameterFragment()
         fragment.arguments = args
+        Log.d("ParameterBottomSheet", "addParameterFragment")
 
         childFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerBottomSheet, fragment)

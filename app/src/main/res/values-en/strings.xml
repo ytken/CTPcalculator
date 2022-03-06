@@ -11,4 +11,6 @@
     <string name="stringEmptyJson">Not defined</string>
     <string name="noInternetConnection">Internet connection is required</string>
     <string name="userNumberNoLimit">No limitations</string>
+    <string name="yourInsuranceSuccess">Your policy issued successfully</string>
+    <string name="buttonDone">Done</string>
 </resources>
