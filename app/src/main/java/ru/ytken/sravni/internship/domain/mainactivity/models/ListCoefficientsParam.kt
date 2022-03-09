@@ -1,18 +1,30 @@
 package ru.ytken.sravni.internship.domain.mainactivity.models
 
+import android.content.Context
+import ru.ytken.sravni.internship.R
+
 class ListCoefficientsParam(
-    val list: ArrayList<CoefficientParamMain> = arrayListOf(
-        CoefficientParamMain("БТ", "БТ","базовый тариф",
-        "Устанавливает страховая компания", "2 754 - 4 432 ₽"),
-        CoefficientParamMain("КМ", "КМ","коэфф. мощности",
-        "Чем мощнее автомобиль, \nтем дороже страховой полис", "0,6 - 1,6"),
-        CoefficientParamMain("КТ", "КТ","территориальный коэфф.",
-        "Определяется по прописке собственника автомобиля", "0,64 - 1,99"),
-        CoefficientParamMain("КБМ", "КБМ","коэфф. безаварийности",
-        "Учитывается только самый высокий коэффициент из всех водителей", "0,5 - 2,45"),
-        CoefficientParamMain("КВС", "КВС","коэфф. возраст/стаж",
-        "Чем больше возраст и стаж у вписанного в полис водителя, \nтем дешевле будет полис", "0,90 - 1,93"),
-        CoefficientParamMain("КО", "КО","коэфф. ограничений",
-        "Полис с ограниченным списком водителей будет стоить дешевле", "1 или 1,99")
-    )
-)
+    val list: ArrayList<CoefficientParamMain> = ArrayList()
+) {
+    fun initList(context: Context) {
+        val arrays = arrayOf(
+            context.resources.getStringArray(R.array.BT),
+            context.resources.getStringArray(R.array.KM),
+            context.resources.getStringArray(R.array.KT),
+            context.resources.getStringArray(R.array.KBM),
+            context.resources.getStringArray(R.array.KVS),
+            context.resources.getStringArray(R.array.KO)
+        )
+        for (array in arrays) {
+            list.add(
+                CoefficientParamMain(
+                    array[0],
+                    array[1],
+                    array[2],
+                    array[3],
+                    array[4]
+                )
+            )
+        }
+    }
+}

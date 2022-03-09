@@ -21,10 +21,103 @@
     <string name="TAG_last_view" translatable="false">TAG_last_view</string>
     <string name="TAG_index_pass" translatable="false">TAG_index_pass</string>
     <string name="TAG_insurer_result" translatable="false">TAG_insurer_result</string>
-    <string name="TAG_insurer_icon" translatable="false">TAG_insurer_icon</string>
+    <string name="TAG_group_row_view" translatable="false">TAG_group_row_view</string>
 
     <string name="userYoungestName" translatable="false">userYoungest</string>
     <string name="userNumberName" translatable="false">userNumber</string>
     <string name="userNumberDefault" translatable="false">!</string>
     <string name="fileIconBankName" translatable="false">bankIcon.png</string>
+
+    <string-array name="BT">
+        <item>БТ</item>
+        <item>БТ</item>
+        <item>базовый тариф</item>
+        <item>Устанавливает страховая компания</item>
+        <item>2 754 – 4 432 ₽</item>
+    </string-array>
+
+    <string-array name="KM">
+        <item>КМ</item>
+        <item>КМ</item>
+        <item>коэфф. мощности</item>
+        <item>Чем мощнее автомобиль,
+            тем дороже страховой полис</item>
+        <item>0,6 – 1,6</item>
+    </string-array>
+
+    <string-array name="KT">
+        <item>КТ</item>
+        <item>КТ</item>
+        <item>территориальный коэфф.</item>
+        <item>Определяется по прописке собственника автомобиля</item>
+        <item>0,64 – 1,99</item>
+    </string-array>
+
+    <string-array name="KBM">
+        <item>КБМ</item>
+        <item>КБМ</item>
+        <item>коэфф. безаварийности</item>
+        <item>Учитывается только самый высокий коэффициент из всех водителей</item>
+        <item>0,5 – 2,45</item>
+    </string-array>
+
+    <string-array name="KVS">
+        <item>КВС</item>
+        <item>КВС</item>
+        <item>коэфф. возраст/стаж</item>
+        <item>Чем больше возраст и стаж у вписанного в полис водителя,
+            тем дешевле будет полис</item>
+        <item>0,90 – 1,93</item>
+    </string-array>
+
+    <string-array name="KO">
+        <item>КО</item>
+        <item>КО</item>
+        <item>коэфф. ограничений</item>
+        <item>Полис с ограниченным списком водителей будет стоить дешевле</item>
+        <item>1 или 1,99</item>
+    </string-array>
+
+    <string-array name="userCity">
+        <item>userCity</item>
+        <item>Город регистрации собственника</item>
+        <item>text</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="userCapacity">
+        <item>userCapacity</item>
+        <item>Мощность автомобиля</item>
+        <item>number</item>
+        <item>л.с.</item>
+    </string-array>
+
+    <string-array name="userNumber">
+        <item>userNumber</item>
+        <item>Сколько водителей</item>
+        <item>number</item>
+        <item>водителя</item>
+    </string-array>
+
+    <string-array name="userYoungest">
+        <item>userYoungest</item>
+        <item>Возраст младшего из водителей</item>
+        <item>text</item>
+        <item>лет</item>
+    </string-array>
+
+    <string-array name="userMinExp">
+        <item>userMinExp</item>
+        <item>Минимальный стаж водителей</item>
+        <item>text</item>
+        <item>года</item>
+    </string-array>
+
+    <string-array name="userNoCrush">
+        <item>userNoCrush</item>
+        <item>Сколько лет не было аварий</item>
+        <item>number</item>
+        <item>года</item>
+    </string-array>
+
 </resources>

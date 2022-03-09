@@ -1,14 +1,9 @@
 package ru.ytken.sravni.internship.presentation
 
-import android.graphics.Bitmap
-import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.ImageLoader
-import coil.request.ImageRequest
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import ru.ytken.sravni.internship.data.storage.models.insurersactivity.Coefficient
 import ru.ytken.sravni.internship.data.storage.models.insurersactivity.ListCoefficientsPost
@@ -17,16 +12,15 @@ import ru.ytken.sravni.internship.domain.insurersactivity.models.CoefficientPara
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.GetListOfInsurersUseCase
 import ru.ytken.sravni.internship.domain.insurersactivity.usecase.SaveListOfCoefficientsUseCase
-import java.io.ByteArrayOutputStream
 
 class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficientsUseCase,
-    val getListOfInsurersUseCase: GetListOfInsurersUseCase): ViewModel() {
+    val getListOfInsurersUseCase: GetListOfInsurersUseCase
+    ): ViewModel() {
 
     private var liveListInsurers = MutableLiveData<List<InsurerParam>>(null)
-    val listInsurers = liveListInsurers
+    val listInsurers: LiveData<List<InsurerParam>> = liveListInsurers
 
-    private var liveResponseFromApi = MutableLiveData<Boolean>()
-    val responseFromApi = liveResponseFromApi
+    var listExpanded = MutableLiveData<Boolean>(false)
 
     private lateinit var listCoefficientsPost: ListCoefficientsPost
 
@@ -35,7 +29,6 @@ class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficient
         viewModelScope.launch {
             listCoefficientsPost = listOfCoefficientsParamToListCoefficientsPost(listCoefficientParam)
             val result = saveListOfCoefficientsUseCase.execute(listCoefficientsPost)
-            responseFromApi.value = result.isSuccessful
             if(result.isSuccessful)
                 load()
         }
@@ -48,29 +41,24 @@ class InsurersViewModel(val saveListOfCoefficientsUseCase: SaveListOfCoefficient
     private fun listOfCoefficientsParamToListCoefficientsPost( listCoefficientParam:
         List<CoefficientParam>)
     : ListCoefficientsPost {
-        val initArray = listCoefficientParam.toTypedArray()
-        val arrayCoefficient: Array<Coefficient> = Array(initArray.size) {
-            i -> Coefficient(initArray[i].title, initArray[i].value)
-        }
-        return ListCoefficientsPost(arrayCoefficient)
+        return ListCoefficientsPost(listCoefficientParam.toTypedArray().map {
+            Coefficient(it.title, it.value)
+        }.toTypedArray())
     }
 
     private fun listInsurersGetToListInsurerParam(listInsurersGet: ListInsurersGet) :
             List<InsurerParam> {
-        val initList = listInsurersGet.offers
-        val listInsurersParam = List<InsurerParam>(initList.size) { index ->
-            val element = initList.get(index)
+        return listInsurersGet.offers.map {
             InsurerParam(
-                element.name,
-                element.rating,
-                element.price,
-                element.branding.fontColor,
-                element.branding.backgroundColor,
-                element.branding.iconTitle,
-                element.branding.bankLogoUrlPDF,
-                element.branding.bankLogoUrlSVG
+                it.name,
+                it.rating,
+                it.price,
+                it.branding.fontColor,
+                it.branding.backgroundColor,
+                it.branding.iconTitle,
+                it.branding.bankLogoUrlPDF,
+                it.branding.bankLogoUrlSVG
             )
         }
-        return listInsurersParam
     }
 }

@@ -1,21 +1,17 @@
 package ru.ytken.sravni.internship.presentation
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListCoefficientsGet
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.ListParametersPost
 import ru.ytken.sravni.internship.data.storage.models.mainactivity.Parameter
 import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListParametersParam
-import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.usecase.GetListOfCoefficientsUseCase
 import ru.ytken.sravni.internship.domain.mainactivity.usecase.SaveParametersUseCase
 
@@ -24,20 +20,21 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
 ): ViewModel() {
 
     private var liveListCoefficient = MutableLiveData(ListCoefficientsParam())
-    val listCoefficient = liveListCoefficient
+    val listCoefficient:LiveData<ListCoefficientsParam> = liveListCoefficient
 
     private var liveListParameters = MutableLiveData(ListParametersParam())
-    val listParameters = liveListParameters
+    val listParameters:LiveData<ListParametersParam> = liveListParameters
 
-    private var liveCurrentFragmentNumber = MutableLiveData<Int>()
-    val currentFragmentNumber = liveCurrentFragmentNumber
+    var listExpanded = MutableLiveData<Boolean>(false)
 
-    private var liveResponseFromApi = MutableLiveData<Boolean>()
-    val responseFromApi = liveResponseFromApi
+    fun initLists(context: Context) {
+        liveListCoefficient.value?.initList(context)
+        liveListParameters.value?.initList(context)
+    }
 
     fun saveParameter(numberView: Int, value: String) {
         val list = liveListParameters.value?.list
-        if (list != null) {
+        if (list != null && numberView < list.size) {
             val param = list[numberView]
             param.value = value
             list[numberView] = param
@@ -50,7 +47,6 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
             listParametersParamToListParametersPost(it)
         }?.let { saveParametersUseCase.execute(it) }
         if (result != null) {
-            responseFromApi.value = result.isSuccessful
             if (result.isSuccessful)
                 load()
         }
@@ -61,35 +57,22 @@ class MainViewModel(val getListOfCoefficientsUseCase: GetListOfCoefficientsUseCa
         liveListCoefficient.value = response.body() ?.let { listCoefficientsGetToListCoefficientsParam(it) }
     }
 
-    fun setCurrentFragmentNumber(currentFragmentNumber: Int) {
-        liveCurrentFragmentNumber.value = currentFragmentNumber
-    }
-
     private fun listCoefficientsGetToListCoefficientsParam(listCoefficientsGet: ListCoefficientsGet): ListCoefficientsParam {
-        val resultRep = listCoefficientsGet.factors
-        val listToAdd = ArrayList<CoefficientParamMain>()
-
-        resultRep.forEach {
-            listToAdd.add(
-                CoefficientParamMain(
-                    it.title,
-                    it.headerValue,
-                    it.name,
-                    it.detailText,
-                    it.value
-                )
+        return ListCoefficientsParam(listCoefficientsGet.factors.map {
+            CoefficientParamMain(
+                it.title,
+                it.headerValue,
+                it.name,
+                it.detailText,
+                it.value
             )
-        }
-
-        return ListCoefficientsParam(listToAdd)
+        } as ArrayList<CoefficientParamMain>)
     }
 
     private fun listParametersParamToListParametersPost(listParameterParam: ListParametersParam) : ListParametersPost {
-        val initArray = listParameterParam.list
-        val arrayParameter: Array<Parameter> = Array(initArray.size) {
-                i -> Parameter(initArray[i].title, initArray[i].value)
-        }
-        return ListParametersPost(arrayParameter)
+        return ListParametersPost(listParameterParam.list.map {
+            Parameter(it.title, it.value)
+        }.toTypedArray())
     }
 
 }

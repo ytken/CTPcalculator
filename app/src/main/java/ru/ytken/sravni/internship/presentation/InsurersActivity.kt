@@ -47,7 +47,7 @@ class InsurersActivity : AppCompatActivity() {
 
         val listCoeffs = intent.getSerializableExtra(getString(R.string.TAG_send_coeffs)) as ArrayList<CoefficientParamMain>
         listCoeffs.let {
-            Utils.inflateCoefficientLayout(this, binding.linearCoefficientsInsurers, it, false)
+            Utils.inflateCoefficientLayout(this, binding.linearCoefficientsInsurers, it, vm.listExpanded)
         }
 
         vm.listInsurers.observe(this) {
@@ -56,7 +56,7 @@ class InsurersActivity : AppCompatActivity() {
             binding.buttonCountExactPrice.isEnabled = true
         }
 
-        listCoeffs.let { listCoefficientsParamToListCoefficient(it) }?.let {
+        listCoefficientsParamToListCoefficient(listCoeffs).let {
             if (NetworkHelper.isNetworkConnected(this@InsurersActivity))
                 vm.save(it)
             else
@@ -80,42 +80,13 @@ class InsurersActivity : AppCompatActivity() {
                 layoutInsurers.addView(rowView)
             }
         else
-            insurersArray.forEachIndexed { index, insurerParam ->
-                rowView = LayoutInflater.from(context)
-                    .inflate(R.layout.insurers_list_child_view, layoutInsurers, false)
-
-                val textViewHeading = rowView.findViewById<TextView>(R.id.textViewNameBank)
-                textViewHeading.text = insurerParam.name
-
-                val textViewRating = rowView.findViewById<TextView>(R.id.textViewBankRating)
-                textViewRating.text = insurerParam.rating.toString()
-
-                val imageViewStar = rowView.findViewById<ImageView>(R.id.imageViewStar)
-                imageViewStar.setImageResource(R.drawable.ic_star)
-
-                val textViewCost = rowView.findViewById<TextView>(R.id.textViewInsuranceCost)
-                textViewCost.text = "${convertStringToPrice(insurerParam.price)}₽"
-
-                val iconSVGurl = insurerParam.bankLogoUrlSVG
-                val imageViewIcon = rowView.findViewById<ImageView>(R.id.imageViewIconBank)
-                if (iconSVGurl != null) {
-                    imageViewIcon.loadSvg(iconSVGurl)
-                } else {
-                    imageViewIcon.setImageBitmap(generateIcon(insurerParam))
-                }
-
+            insurersArray.forEach { insurerParam ->
+                val rowView = Utils.createRowViewInsurer(
+                    context, layoutInsurers,
+                    insurerParam)
                 layoutInsurers.addView(rowView)
 
-
                 rowView.setOnClickListener {
-                    val rowViewIcon = it.findViewById<ImageView>(R.id.imageViewIconBank)
-                    val stream = openFileOutput(getString(R.string.fileIconBankName), Context.MODE_PRIVATE)
-                    val bmp = rowViewIcon.drawable.toBitmap(36,36)
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
-                    stream.close()
-                    bmp.recycle()
-
                     val result = Intent()
                     result.putExtra(
                         getString(R.string.TAG_insurer_result),
@@ -127,65 +98,14 @@ class InsurersActivity : AppCompatActivity() {
             }
     }
 
-    private fun ImageView.loadSvg(url: String) {
-        val imageLoader = ImageLoader.Builder(this.context)
-            .componentRegistry { add(SvgDecoder(this@loadSvg.context)) }
-            .build()
 
-        val request = ImageRequest.Builder(this.context)
-            .crossfade(false)
-            .data(url)
-            .target(this)
-            .build()
-
-        imageLoader.enqueue(request)
-    }
-
-    private fun generateIcon(insurerParam: InsurerParam): Bitmap {
-        val width = 36
-        val height = 36
-        val radiusCorners = resources.getDimension(R.dimen.iconRoundedCornersRadius)
-
-        val tempBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        val tempCanvas = Canvas(tempBitmap)
-
-        val paint = Paint()
-        paint.color = Color.WHITE
-        tempCanvas.drawPaint(paint)
-
-        paint.isAntiAlias = true
-        paint.color = Color.parseColor("#" + insurerParam.backgroundColor)
-        paint.style = Paint.Style.FILL
-        val rect = RectF(0F,0F, width.toFloat(), height.toFloat())
-        tempCanvas.drawRoundRect(
-            rect,
-            radiusCorners,
-            radiusCorners,
-            paint
-        )
-
-        paint.color = Color.parseColor("#" + insurerParam.fontColor)
-        paint.textSize = 25.0f
-        val textRect = Rect()
-        val text = insurerParam.iconTitle
-        paint.getTextBounds(text, 0, text.length, textRect)
-        tempCanvas.drawText(
-            text,
-            width / 2f - (paint.measureText(text) / 2f),
-            height / 2f + (textRect.height() / 2f),
-            paint
-        )
-        return tempBitmap
-    }
 
     private fun listCoefficientsParamToListCoefficient(
         listCoefficientsParam: ArrayList<CoefficientParamMain>
     ): List<CoefficientParam> {
-        val resultList = List<CoefficientParam>(listCoefficientsParam.size) { index ->
-            val element = listCoefficientsParam[index]
-            CoefficientParam(element.title, element.value)
+        return listCoefficientsParam.map {
+            CoefficientParam(it.title, it.value)
         }
-        return resultList
     }
 
 }

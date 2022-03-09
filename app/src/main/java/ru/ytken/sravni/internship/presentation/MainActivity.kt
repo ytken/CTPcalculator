@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,10 +24,8 @@ import ru.ytken.sravni.internship.R
 import ru.ytken.sravni.internship.databinding.ActivityMainBinding
 import ru.ytken.sravni.internship.databinding.FragmentInsurerBinding
 import ru.ytken.sravni.internship.domain.insurersactivity.models.InsurerParam
-import ru.ytken.sravni.internship.domain.mainactivity.models.CoefficientParamMain
 import ru.ytken.sravni.internship.domain.mainactivity.models.ListCoefficientsParam
 import ru.ytken.sravni.internship.domain.mainactivity.models.ParameterParamMain
-import java.io.Serializable
 
 class MainActivity : AppCompatActivity(),
     ParameterBottomSheet.ChangeActivity,
@@ -40,7 +37,6 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var binding: ActivityMainBinding
     private var bottomSheetFragment: ParameterBottomSheet? = null
-    private var currentParameterFragment: Int? = null
 
     private val TAG_FRAGMENT = "TAG_BOTTOM_SHEET_FRAGMENT"
     private val TAG_INSURER_FRAGMENT = "TAG_INSURER_FRAGMENT"
@@ -58,11 +54,12 @@ class MainActivity : AppCompatActivity(),
                         as ParameterBottomSheet?
         }
 
+        vm.initLists(this)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.buttonCount.isEnabled = false
-        binding.buttonCount.setBackgroundResource(R.drawable.main_button_selector)
 
         binding.progressBarLoadCoefficients.visibility = View.INVISIBLE
 
@@ -76,11 +73,13 @@ class MainActivity : AppCompatActivity(),
             binding.progressBarLoadCoefficients.visibility = View.INVISIBLE
             binding.buttonCount.setText(R.string.buttonCalculateCTP)
 
-            Utils.inflateCoefficientLayout(this, binding.expandableLinearLayout, it.list, false)
+            Utils.inflateCoefficientLayout(this,
+                binding.expandableLinearLayout, it.list,
+                vm.listExpanded)
             Log.d(getString(R.string.TAG_API), "Updating ListCoefficient")
 
-            if (vm.listParameters.value?.list
-                    ?.none { parameterParam -> parameterParam.value.isEmpty() } == true
+            if (vm.listParameters.value?.list?.
+                none { parameterParam -> parameterParam.value.isEmpty() } == true
             )
                 binding.buttonCount.isEnabled = true
 
@@ -90,10 +89,6 @@ class MainActivity : AppCompatActivity(),
         vm.listParameters.observe(this) {
             binding.listViewParameters.removeAllViews()
             inflateParameterLayout(this, binding.listViewParameters, it.list)
-        }
-
-        vm.currentFragmentNumber.observe(this) {
-            currentParameterFragment = it
         }
     }
 
@@ -146,8 +141,6 @@ class MainActivity : AppCompatActivity(),
             }
 
             rowView.setOnClickListener {
-                vm.setCurrentFragmentNumber(index)
-
                 val bundle = Bundle()
                 bundle.putInt(getString(R.string.TAG_number_view), index)
                 bundle.putSerializable(getString(R.string.TAG_parameter_show),
@@ -249,15 +242,7 @@ class MainActivity : AppCompatActivity(),
     class InsurerBottomSheet : BottomSheetDialogFragment() {
 
         private var binding: FragmentInsurerBinding? = null
-        private var insurerParam: InsurerParam? = null
-        //private var insurerIcon: Bitmap? = null
-
-        private var mContext: Context? = null
-
-        override fun onAttach(context: Context) {
-            super.onAttach(context)
-            mContext = context
-        }
+        private lateinit var insurerParam: InsurerParam
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -298,34 +283,8 @@ class MainActivity : AppCompatActivity(),
             val cardViewInsurer = view.findViewById<LinearLayout>(R.id.cardViewInsurer)
             val buttonInsurerDone = view.findViewById<Button>(R.id.buttonInsurerDone)
 
-            val rowView = LayoutInflater.from(context)
-                .inflate(R.layout.insurers_list_child_view, cardViewInsurer, false)
-
-            val headingFont = Typeface.createFromAsset(context?.assets, "font/SF-Pro-Display-Bold.otf")
-            val textViewSuccess = view.findViewById<TextView>(R.id.textViewSuccess)
-            textViewSuccess.typeface = headingFont
-
-            val textViewHeading = rowView.findViewById<TextView>(R.id.textViewNameBank)
-            textViewHeading.text = insurerParam?.name
-
-            val textViewRating = rowView.findViewById<TextView>(R.id.textViewBankRating)
-            textViewRating.text = insurerParam?.rating.toString()
-
-            val imageViewStar = rowView.findViewById<ImageView>(R.id.imageViewStar)
-            imageViewStar.setImageResource(R.drawable.ic_star)
-
-            val textViewCost = rowView.findViewById<TextView>(R.id.textViewInsuranceCost)
-            textViewCost.text = "${insurerParam?.price?.let { Utils.convertStringToPrice(it) }} ₽"
-
-            var bmp: Bitmap?
-            val fis = mContext?.openFileInput(getString(R.string.fileIconBankName))
-            bmp = BitmapFactory.decodeStream(fis)
-            fis?.close()
-
-            if (bmp != null) {
-                val imageViewIcon = rowView.findViewById<ImageView>(R.id.imageViewIconBank)
-                imageViewIcon.setImageBitmap(bmp)
-            }
+            val rowView =
+                context?.let { Utils.createRowViewInsurer(it, cardViewInsurer, insurerParam) }
 
             cardViewInsurer.addView(rowView)
 
